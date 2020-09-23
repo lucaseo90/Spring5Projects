@@ -1,25 +1,23 @@
 package com.github.hsseo0501.worldgdp.model;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
-@Data
-@Getter
-@Setter
-public class Country {
-    private String code;
-    private String name;
-    private String continent;
-    private String region;
-    private String surfaceArea;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+@Data public class Country {
+    @NotNull @Size(max = 3, min = 3) private String code;
+    @NotNull @Size(max = 52) private String name;
+    @NotNull private String continent;
+    @NotNull @Size(max = 26) private String region;
+    @NotNull private String surfaceArea;
     private Short indepYear;
-    private Long population;
+    @NotNull private Long population;
     private Double lifeExpectancy;
     private Double gnp;
-    private String localName;
-    private String governmentForm;
+    @NotNull private String localName;
+    @NotNull private String governmentForm;
     private String headOfState;
     private City capital;
-    private String code2;
+    @NotNull private String code2;
 }

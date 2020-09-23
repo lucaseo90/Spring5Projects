@@ -1,15 +1,14 @@
 package com.github.hsseo0501.worldgdp.model;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
-@Data
-@Getter
-@Setter
-public class CountryLanguage {
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+@Data public class CountryLanguage {
     private Country country;
-    private String language;
-    private String isOfficial;
-    private Double percentage;
+    @NotNull private String countryCode;
+    @NotNull @Size(max = 30) private String language;
+    @NotNull @Size(max = 1, min = 1) private String isOfficial;
+    @NotNull private Double percentage;
 }

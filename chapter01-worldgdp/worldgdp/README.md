@@ -16,6 +16,18 @@ Country, City, CountryLanguage 그리고 CountryGDP 모델 추가
 ### Reference
 * lombok - [@Data](https://projectlombok.org/features/Data)
 
+
+## Using Hibernate Validator to add validations
+Country, City 그리고 CountryLanguage 모델에 대해 ```@NotNull``` 및 ```@Size``` 애노테이션 추가
+* ```@NotNull``` 애노테이션은 모델의 프로퍼티 값이 Null이 될 수 없음을 체크한다.
+* ```@Size``` 애노테이션은 모델의 프로퍼티 값이 애노테이션으로 정의한 제한된 범위의 값을 갖는지 체크한다.
+> 이전 장에서 추가된 @Getter / @Setter 애노테이션은 제거
+* 프로퍼티에 대한 유효성 검사를 위해서 hibernate validator를 활용할 수 있다.
+
+### Reference
+* hibernate-validator - [validating constraints](https://docs.jboss.org/hibernate/validator/6.0/reference/en-US/html_single/#_validating_constraints)
+
+
 ## Defining the data access layer - Spring JDBC Template
 
 ## Defining the API controllers
