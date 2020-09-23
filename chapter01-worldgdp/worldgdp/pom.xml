@@ -7,6 +7,12 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>worldgdp Maven Webapp</name>
   <url>http://maven.apache.org</url>
+
+  <properties>
+    <java.version>1.8</java.version>
+    <lombok.version>1.18.12</lombok.version>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -14,6 +20,15 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+
+    <!-- lombok -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <optional>true</optional>
+      <version>${lombok.version}</version>
+    </dependency>
+
   </dependencies>
   <build>
     <finalName>worldgdp</finalName>
