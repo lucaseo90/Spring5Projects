@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  worldgdp-mysql-compose:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "pwd"
+    ports:
+      - "33306:3306"
+    volumes:
+      - /Users/$USER/docker/worldgdp/mysql/data:/var/lib/mysql
+      - /Users/$USER/docker/worldgdp/mysql/config:/etc/mysql/conf.d
+    networks:
+      - worldgdp-mysql-compose-network
+
+networks:
+  worldgdp-mysql-compose-network:
+    driver: bridge
