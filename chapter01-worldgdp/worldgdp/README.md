@@ -1,4 +1,12 @@
 # Contents
+* [Creating an empty application](#Creating-an-empty-application)
+* [Defining the data access layer](#Defining-the-data-access-layer)
+* [Defining the API controllers](#Defining-the-API-controllers)
+* [Deploying to Tomcat](#Deploying-to-Tomcat)
+* [Defining the view controller](#Defining-the-view-controller)
+* [Defining the view templates](#Defining-the-view-templates)
+* [Logging configuration](#Logging-configuration)
+
 ## Creating an empty application
 ```bash
 mvn archetype:generate -DgroupId=com.github.hsseo0501.worldgdp \
@@ -25,15 +33,31 @@ Country, City 그리고 CountryLanguage 모델에 대해 ```@NotNull``` 및 ```@
 * hibernate-validator - [validating constraints](https://docs.jboss.org/hibernate/validator/6.0/reference/en-US/html_single/#_validating_constraints)
 
 
-## Defining the data access layer - Spring JDBC Template
+## Defining the data access layer
+
+### Reference
+
 
 ## Defining the API controllers
 
+### Reference
+
+
 ## Deploying to Tomcat
+
+### Reference
+
 
 ## Defining the view controller
 
+### Reference
+
+
 ## Defining the view templates
 
+### Reference
+
+
 ## Logging configuration
- 
+
+### Reference
