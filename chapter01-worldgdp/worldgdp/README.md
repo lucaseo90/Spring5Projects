@@ -13,11 +13,7 @@ Country, City, CountryLanguage 그리고 CountryGDP 모델 추가
 > 예제에는 왜 @Data 애노테이션도 추가하고 @Getter / @Setter도 추가한건지? 
 * 모델을 선언할 때 lombok을 활용하면 반복적으로 작성해야하는 모델과 관련된 코드들을 애노테이션으로 대체할 수 있다.
 
-### Reference
-* lombok - [@Data](https://projectlombok.org/features/Data)
-
-
-## Using Hibernate Validator to add validations
+### Using Hibernate Validator to add validations
 Country, City 그리고 CountryLanguage 모델에 대해 ```@NotNull``` 및 ```@Size``` 애노테이션 추가
 * ```@NotNull``` 애노테이션은 모델의 프로퍼티 값이 Null이 될 수 없음을 체크한다.
 * ```@Size``` 애노테이션은 모델의 프로퍼티 값이 애노테이션으로 정의한 제한된 범위의 값을 갖는지 체크한다.
@@ -25,6 +21,7 @@ Country, City 그리고 CountryLanguage 모델에 대해 ```@NotNull``` 및 ```@
 * 프로퍼티에 대한 유효성 검사를 위해서 hibernate validator를 활용할 수 있다.
 
 ### Reference
+* lombok - [@Data](https://projectlombok.org/features/Data)
 * hibernate-validator - [validating constraints](https://docs.jboss.org/hibernate/validator/6.0/reference/en-US/html_single/#_validating_constraints)
 
 
