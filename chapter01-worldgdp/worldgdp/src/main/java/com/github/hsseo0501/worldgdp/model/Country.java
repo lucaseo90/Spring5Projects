@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
     @NotNull @Size(max = 52) private String name;
     @NotNull private String continent;
     @NotNull @Size(max = 26) private String region;
-    @NotNull private String surfaceArea;
+    @NotNull private Double surfaceArea;
     private Short indepYear;
     @NotNull private Long population;
     private Double lifeExpectancy;
