@@ -34,6 +34,28 @@ Country, City 그리고 CountryLanguage 모델에 대해 ```@NotNull``` 및 ```@
 
 
 ## Defining the data access layer
+### Database 구성
+#### 실행
+```bash
+# execute docker directory
+docker-compose up -d
+```
+
+#### 접속
+```bash
+docker ps
+docker exec -it ${MYSQL_CONTAINER_NAME} bash
+mysql -uroot -ppwd
+```
+#### 데이터베이스 및 유저 생성 그리고 권한 할당
+```sql
+CREATE DATABASE worldgdp;
+CREATE USER 'worldgdp_service'@'%' IDENTIFIED BY 'worldgdp_password';
+ALTER USER worldgdp_service@'%' IDENTIFIED WITH mysql_native_password BY 'worldgdp_password';
+GRANT ALL PRIVILEGES ON worldgdp.* TO 'worldgdp_service'@'%';
+FLUSH PRIVILEGES;
+```
+
 
 ### Reference
 
