@@ -56,9 +56,79 @@ GRANT ALL PRIVILEGES ON worldgdp.* TO 'worldgdp_service'@'%';
 FLUSH PRIVILEGES;
 ```
 
+### Logging 설정
+Spring JDBC Template에 대한 Unit test 코드 작성 후 해당 코드에 대한 단위 테스트 실행하면 아래와 같은 메시지 발생
+```bash
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+```
+
+#### SLF4J 이용해서 Spring Framework에서 로깅하기
+spring-context의 commons-logging 의존성 제외
+```xml
+<dependency>
+  <groupId>org.springframework</groupId>
+  <artifactId>spring-context</artifactId>
+  <version>${spring.version}</version>
+  <exclusions>
+    <exclusion>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+    </exclusion>
+  </exclusions>
+</dependency>
+```
+
+SLF4J 의존성 추가
+```xml
+<!-- slf4j -->
+<dependency>
+  <groupId>org.slf4j</groupId>
+  <artifactId>slf4j-api</artifactId>
+  <version>${slf4j.version}</version>
+</dependency>
+
+<dependency>
+  <groupId>ch.qos.logback</groupId>
+  <artifactId>logback-classic</artifactId>
+  <version>${logback.version}</version>
+</dependency>
+
+<dependency>
+  <groupId>org.slf4j</groupId>
+  <artifactId>jcl-over-slf4j</artifactId>
+  <version>${slf4j.version}</version>
+</dependency>
+```
+
+```main.resource``` 디렉토리 하위에 ```logback.xml``` 파일 추가하고 아래와 같이 내용 추가
+* 간단하게 설명하면, logger name(com.github.hsseo0501.worldgdp)에 해당하는 패키지의 클래스에 대한 로그를 레벨(debug)에 맞게 출력하라는 의미
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <Pattern>
+        %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
+      </Pattern>
+    </layout>
+  </appender>
+
+  <logger name="com.github.hsseo0501.worldgdp" level="debug" additivity="false">
+    <appender-ref ref="STDOUT" />
+  </logger>
+
+  <root level="debug">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>
+```
+
+> 금방 끝나는건데 maven 의존성 추가해도 자동으로 re-import 안되고 있어서 시간 소요...
 
 ### Reference
-
+* [SLF4J 이용하여 로그 남기는 방법 (with Logback)](https://enai.tistory.com/36)
 
 ## Defining the API controllers
 
