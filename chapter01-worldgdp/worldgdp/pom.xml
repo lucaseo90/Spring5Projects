@@ -20,6 +20,7 @@
     <h2.version>1.4.200</h2.version>
     <logback.version>1.2.3</logback.version>
     <slf4j.version>1.7.25</slf4j.version>
+    <json-simple.version>1.1.1</json-simple.version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
@@ -54,10 +55,16 @@
       <version>${mysql.jdbc.driver.version}</version>
     </dependency>
 
-    <!-- spring core & spring jdbc -->
+    <!-- spring dependencies -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
       <version>${spring.version}</version>
     </dependency>
 
@@ -141,6 +148,13 @@
       <version>${slf4j.version}</version>
     </dependency>
 
+    <!-- json-simple -->
+    <dependency>
+      <groupId>com.googlecode.json-simple</groupId>
+      <artifactId>json-simple</artifactId>
+      <version>${json-simple.version}</version>
+    </dependency>
+
   </dependencies>
   <build>
     <finalName>worldgdp</finalName>
@@ -154,6 +168,21 @@
                   <target>8</target>
               </configuration>
           </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-war</id>
+                <phase>prepare-package</phase>
+                <configuration>
+                  <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
       </plugins>
   </build>
 </project>
