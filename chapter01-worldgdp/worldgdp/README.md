@@ -132,7 +132,49 @@ SLF4J 의존성 추가
 
 ## Defining the API controllers
 
+### Servlet 의존성 및 Tomcat 실행 환경 구성
+Application 실행 전에 WorldBankApiClientTest의 단위 테스트 실행하니 아래와 같은 메시지를 확인했다. 
+```text
+Error:(6, 8) java: cannot access javax.servlet.ServletException
+  class file for javax.servlet.ServletException not found
+```
+
+servlet 의존성을 추가한다.
+```xml
+<!-- servlet -->
+<dependency>
+  <groupId>javax.servlet</groupId>
+  <artifactId>javax.servlet-api</artifactId>
+  <version>3.1.0</version>
+  <scope>provided</scope>
+</dependency>
+```
+
+IDE는 IntelliJ를 사용하고 있는데, 프로젝트 실행과 관련해서 Tomcat에 배포하여 실행할 수 있도록 설정한다.
+```Run -> Edit Configurations...```를 따라서 창을 열면 ```Run/Debug Configurations```라는 창이 뜬다.
+
+![add-new-configuration](./img/add-new-configuration.png)
+
+```Tomcat Server -> Local``` 순서로 Tomcat 설정을 생성한다.  
+
+```Application``` 항목의 ```Configure``` 을 통해 실행시 사용할 tomcat의 경로를 지정한다. 
+
+![before-launch](./img/before-launch.png)
+
+```text
+Warning: No artifacts marked for deployment
+```
+
+말 그대로 배포용으로 선택된 artifact가 없다는 메시지인데, Fix 버튼을 클릭하여 ```war exploded```를 선택한다.
+
+![war-exploded](./img/war-exploded.png)
+
+위 과정을 수행하면 WorldBankApiClientTest 단위테스트도 수행되고, IDE 내에서 tomcat 실행시 ```Hello World!```를 출력하는 페이지를 확인할 수 있다. 
+
+![war-exploded](./img/index-page.png)
+
 ### Reference
+* [intellij 에 servlet 프로젝트 생성하기](https://hellomyblog.tistory.com/31)
 
 
 ## Deploying to Tomcat
