@@ -171,16 +171,20 @@ Warning: No artifacts marked for deployment
 
 위 과정을 수행하면 WorldBankApiClientTest 단위테스트도 수행되고, IDE 내에서 tomcat 실행시 ```Hello World!```를 출력하는 페이지를 확인할 수 있다. 
 
-![war-exploded](./img/index-page.png)
+![index-page](./img/index-page.png)
 
 ### Reference
 * [intellij 에 servlet 프로젝트 생성하기](https://hellomyblog.tistory.com/31)
 
 
 ## Deploying to Tomcat
+index page를 확인하면 URL이 ```http://localhost:18080/worldgdp_war_exploded/``` 인 것을 확인할 수 있다. 
+```Run -> Edit Configurations... ```에서 Tomcat의 Deployment 설정을 보면 ```Application context```을 수정한다.
+
+![application-context](./img/application-context.png)
 
 ### Reference
-
+* [[IntelliJ] Export War in IntelliJ and Deploy to Tomcat](https://gmlwjd9405.github.io/2018/12/24/intellij-tomcat-war-deploy.html)
 
 ## Defining the view controller
 
