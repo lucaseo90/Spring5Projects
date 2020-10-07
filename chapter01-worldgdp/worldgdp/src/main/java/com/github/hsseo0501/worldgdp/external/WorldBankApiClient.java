@@ -15,8 +15,7 @@ import java.util.List;
 @Service
 public class WorldBankApiClient {
 
-
-    String GDP_URL = "http://api.worldbank.org/v2/country/all/indicator/NY.GDP.MKTP.CD?format=json&date=2008:2020";
+    private String GDP_URL = "http://api.worldbank.org/v2/country/%s/indicator/NY.GDP.MKTP.CD?format=json&date=2008:2019";
 
     public List<CountryGDP> getGDP(String countryCode) throws ParseException {
         RestTemplate worldBankRestTmplt = new RestTemplate();
