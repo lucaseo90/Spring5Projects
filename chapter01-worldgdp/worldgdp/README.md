@@ -197,6 +197,12 @@ index page를 확인하면 URL이 ```http://localhost:18080/worldgdp_war_explode
 * [[SPRING] No converter found for return value of type: class java.util.HashMap(JSON 변환 에러)](https://mine-it-record.tistory.com/3)
 
 
-## Logging configuration
+## ETC
+* Code Convention - 'intellij-java-google-style'
+  * [intellij-java-google-style.xml](https://github.com/google/styleguide/blob/gh-pages/intellij-java-google-style.xml)
+* Constructor based Injection
+* Field Naming & Alphabetically Order
 
 ### Reference
+* [IntelliJ에 Google Style 적용](https://toma0912.tistory.com/93)
+* [스프링 - 생성자 주입을 사용해야 하는 이유, 필드인젝션이 좋지 않은 이유](https://yaboong.github.io/spring/2019/08/29/why-field-injection-is-bad/)

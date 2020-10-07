@@ -17,39 +17,43 @@ import java.util.Map;
 @RequestMapping("/")
 public class ViewController {
 
-    @Autowired
-    private CountryDao countryDao;
+  private final CityDao cityDao;
 
-    @Autowired
-    private LookupDao lookupDao;
+  private final CountryDao countryDao;
 
-    @Autowired
-    private CityDao cityDao;
+  private final LookupDao lookupDao;
 
-    @GetMapping({"/countries", "/"})
-    public String countries(Model model, @RequestParam Map<String, Object> params) {
-        model.addAttribute("continents", lookupDao.getContinents());
-        model.addAttribute("regions", lookupDao.getRegions());
-        model.addAttribute("countries", countryDao.getCountries(params));
-        model.addAttribute("count", countryDao.getCountriesCount(params));
+  @Autowired
+  public ViewController(CityDao cityDao, CountryDao countryDao, LookupDao lookupDao) {
+    this.cityDao = cityDao;
+    this.countryDao = countryDao;
+    this.lookupDao = lookupDao;
+  }
 
-        return "countries";
-    }
+  @GetMapping({"/countries", "/"})
+  public String countries(Model model, @RequestParam Map<String, Object> params) {
+    model.addAttribute("continents", lookupDao.getContinents());
+    model.addAttribute("regions", lookupDao.getRegions());
+    model.addAttribute("countries", countryDao.getCountries(params));
+    model.addAttribute("count", countryDao.getCountriesCount(params));
 
-    @GetMapping("/countries/{code}")
-    public String countryDetail(@PathVariable String code, Model model) {
-        model.addAttribute("c", countryDao.getCountryDetail(code));
-        return "country";
-    }
+    return "countries";
+  }
 
-    @GetMapping("/countries/{code}/form")
-    public String editCountry(@PathVariable String code, Model model) {
-        model.addAttribute("c", countryDao.getCountryDetail(code));
-        model.addAttribute("cities", cityDao.getCities(code));
-        model.addAttribute("continents", lookupDao.getContinents());
-        model.addAttribute("regions", lookupDao.getRegions());
-        model.addAttribute("heads", lookupDao.getHeadOfStates());
-        model.addAttribute("govs", lookupDao.getGovernmentTypes());
-        return "country-form";
-    }
+  @GetMapping("/countries/{code}")
+  public String countryDetail(@PathVariable String code, Model model) {
+    model.addAttribute("c", countryDao.getCountryDetail(code));
+    return "country";
+  }
+
+  @GetMapping("/countries/{code}/form")
+  public String editCountry(@PathVariable String code, Model model) {
+    model.addAttribute("c", countryDao.getCountryDetail(code));
+    model.addAttribute("cities", cityDao.getCities(code));
+    model.addAttribute("continents", lookupDao.getContinents());
+    model.addAttribute("regions", lookupDao.getRegions());
+    model.addAttribute("heads", lookupDao.getHeadOfStates());
+    model.addAttribute("govs", lookupDao.getGovernmentTypes());
+    return "country-form";
+  }
 }

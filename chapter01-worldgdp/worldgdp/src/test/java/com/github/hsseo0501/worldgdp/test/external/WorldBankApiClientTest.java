@@ -2,6 +2,7 @@ package com.github.hsseo0501.worldgdp.test.external;
 
 import com.github.hsseo0501.worldgdp.external.WorldBankApiClient;
 import com.github.hsseo0501.worldgdp.model.CountryGDP;
+import org.assertj.core.internal.bytebuddy.asm.Advice.Unused;
 import org.json.simple.parser.ParseException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,16 +18,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringJUnitConfig(classes = {WorldBankApiClient.class})
 public class WorldBankApiClientTest {
 
-    @Autowired
-    private WorldBankApiClient worldBankApiClient;
+  private final WorldBankApiClient worldBankApiClient;
 
-    @Test
-    public void testGetGDP() throws ParseException {
-        List<CountryGDP> gdpData = worldBankApiClient.getGDP("IN");
-        assertThat(gdpData).hasSize(50);
-        CountryGDP gdp = gdpData.get(0);
-        assertThat(gdp.getYear()).isEqualTo(Short.valueOf("2020"));
-        gdp = gdpData.get(10);
-        assertThat(gdp.getYear()).isEqualTo(Short.valueOf("2010"));
-    }
+  @Autowired
+  public WorldBankApiClientTest(WorldBankApiClient worldBankApiClient) {
+    this.worldBankApiClient = worldBankApiClient;
+  }
+
+  @Test
+  public void testGetGDP() throws ParseException {
+    List<CountryGDP> gdpData = worldBankApiClient.getGDP("IN");
+    assertThat(gdpData).hasSize(50);
+    CountryGDP gdp = gdpData.get(0);
+    assertThat(gdp.getYear()).isEqualTo(Short.valueOf("2020"));
+    gdp = gdpData.get(10);
+    assertThat(gdp.getYear()).isEqualTo(Short.valueOf("2010"));
+  }
 }

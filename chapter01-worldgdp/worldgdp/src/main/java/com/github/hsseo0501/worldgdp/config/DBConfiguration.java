@@ -10,25 +10,32 @@ import javax.sql.DataSource;
 
 @Configuration
 public class DBConfiguration {
-    @Value("${jdbcUrl}") String jdbcUrl;
-    @Value("${dataSource.user}") String username;
-    @Value("${dataSource.password}") String password;
-    @Value("${dataSourceClassName}") String className;
 
-    @Bean
-    public DataSource getDataSource() {
-        HikariDataSource ds = new HikariDataSource();
-        ds.setJdbcUrl(jdbcUrl);
-        ds.setUsername(username);
-        ds.setPassword(password);
-        ds.setDriverClassName(className);
-        return ds;
-    }
+  @Value("${jdbcUrl}")
+  private String jdbcUrl;
 
-    @Bean
-    public NamedParameterJdbcTemplate namedParamJdbcTemplate() {
-        NamedParameterJdbcTemplate namedParamJdbcTemplate =
-                new NamedParameterJdbcTemplate(getDataSource());
-        return namedParamJdbcTemplate;
-    }
+  @Value("${dataSource.user}")
+  private String username;
+
+  @Value("${dataSource.password}")
+  private String password;
+
+  @Value("${dataSourceClassName}")
+  private String className;
+
+  @Bean
+  public DataSource getDataSource() {
+    HikariDataSource ds = new HikariDataSource();
+    ds.setJdbcUrl(jdbcUrl);
+    ds.setUsername(username);
+    ds.setPassword(password);
+    ds.setDriverClassName(className);
+    return ds;
+  }
+
+  @Bean
+  public NamedParameterJdbcTemplate namedParamJdbcTemplate() {
+    NamedParameterJdbcTemplate namedParamJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource());
+    return namedParamJdbcTemplate;
+  }
 }

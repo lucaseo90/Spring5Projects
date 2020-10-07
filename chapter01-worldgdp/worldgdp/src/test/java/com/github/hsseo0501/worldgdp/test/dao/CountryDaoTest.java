@@ -20,73 +20,76 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-@SpringJUnitConfig(classes = {
-        TestDBConfiguration.class, CountryDao.class})
+@SpringJUnitConfig(classes = {TestDBConfiguration.class, CountryDao.class})
 public class CountryDaoTest {
 
-    @Autowired
-    private CountryDao countryDao;
+  private final CountryDao countryDao;
 
-    @Autowired
-    @Qualifier("testTemplate")
-    private NamedParameterJdbcTemplate namedParamJdbcTemplate;
+  @Autowired
+  public CountryDaoTest(CountryDao countryDao) {
+    this.countryDao = countryDao;
+  }
 
-    @Before
-    public void setup() {
-        countryDao.setNamedParameterJdbcTemplate(namedParamJdbcTemplate);
-    }
+  @Autowired
+  @Qualifier("testTemplate")
+  private NamedParameterJdbcTemplate namedParamJdbcTemplate;
 
-    @Test
-    public void testGetCountries() {
-        List<Country> countries = countryDao.getCountries(new HashMap<>());
-        //AssertJ assertions
-        //Paginated List, so should have 20 entries
-        assertThat(countries).hasSize(20);
-    }
+  @Before
+  public void setup() {
+    countryDao.setNamedParameterJdbcTemplate(namedParamJdbcTemplate);
+  }
 
-    @Test
-    public void testGetCountries_searchByName() {
-        Map<String, Object> params = new HashMap<>();
-        params.put("search", "Aruba");
-        List<Country> countries = countryDao.getCountries(params);
-        assertThat(countries).hasSize(1);
-    }
+  @Test
+  public void testGetCountries() {
+    List<Country> countries = countryDao.getCountries(new HashMap<>());
+    //AssertJ assertions
+    //Paginated List, so should have 20 entries
+    assertThat(countries).hasSize(20);
+  }
 
-    @Test
-    public void testGetCountries_searchByContinent() {
-        Map<String, Object> params = new HashMap<>();
-        params.put("continent", "Asia");
-        List<Country> countries = countryDao.getCountries(params);
-        assertThat(countries).hasSize(20);
-    }
+  @Test
+  public void testGetCountries_searchByName() {
+    Map<String, Object> params = new HashMap<>();
+    params.put("search", "Aruba");
+    List<Country> countries = countryDao.getCountries(params);
+    assertThat(countries).hasSize(1);
+  }
 
-    @Test
-    public void testGetCountryDetail() {
-        Country c = countryDao.getCountryDetail("IND");
-        assertThat(c).isNotNull();
-        assertThat(c.toString()).isEqualTo("Country(code=IND, name=India, "
-                        + "continent=Asia, region=Southern and Central Asia, "
-                        + "surfaceArea=3287263.0, indepYear=1947, population=1013662000, "
-                        + "lifeExpectancy=62.5, gnp=447114.0, localName=Bharat/India, "
-                        + "governmentForm=Federal Republic, headOfState=Kocheril Raman Narayanan, "
-                        + "capital=City(id=1109, name=New Delhi, countryCode=null, "
-                        + "country=null, district=null, population=null), code2=IN)");
-    }
+  @Test
+  public void testGetCountries_searchByContinent() {
+    Map<String, Object> params = new HashMap<>();
+    params.put("continent", "Asia");
+    List<Country> countries = countryDao.getCountries(params);
+    assertThat(countries).hasSize(20);
+  }
 
-    @Test
-    public void testEditCountryDetail() {
-        Country c = countryDao.getCountryDetail("IND");
-        c.setHeadOfState("Ram Nath Kovind");
-        c.setPopulation(1324171354l);
-        countryDao.editCountryDetail("IND", c);
-        c = countryDao.getCountryDetail("IND");
-        assertThat(c.getHeadOfState()).isEqualTo("Ram Nath Kovind");
-        assertThat(c.getPopulation()).isEqualTo(1324171354l);
-    }
+  @Test
+  public void testGetCountryDetail() {
+    Country c = countryDao.getCountryDetail("IND");
+    assertThat(c).isNotNull();
+    assertThat(c.toString()).isEqualTo("Country(code=IND, name=India, "
+        + "continent=Asia, region=Southern and Central Asia, "
+        + "surfaceArea=3287263.0, indepYear=1947, population=1013662000, "
+        + "lifeExpectancy=62.5, gnp=447114.0, localName=Bharat/India, "
+        + "governmentForm=Federal Republic, headOfState=Kocheril Raman Narayanan, "
+        + "capital=City(id=1109, name=New Delhi, countryCode=null, "
+        + "country=null, district=null, population=null), code2=IN)");
+  }
 
-    @Test
-    public void testGetCountriesCount() {
-        Integer count = countryDao.getCountriesCount(Collections.EMPTY_MAP);
-        assertThat(count).isEqualTo(239);
-    }
+  @Test
+  public void testEditCountryDetail() {
+    Country c = countryDao.getCountryDetail("IND");
+    c.setHeadOfState("Ram Nath Kovind");
+    c.setPopulation(1324171354l);
+    countryDao.editCountryDetail("IND", c);
+    c = countryDao.getCountryDetail("IND");
+    assertThat(c.getHeadOfState()).isEqualTo("Ram Nath Kovind");
+    assertThat(c.getPopulation()).isEqualTo(1324171354l);
+  }
+
+  @Test
+  public void testGetCountriesCount() {
+    Integer count = countryDao.getCountriesCount(Collections.EMPTY_MAP);
+    assertThat(count).isEqualTo(239);
+  }
 }

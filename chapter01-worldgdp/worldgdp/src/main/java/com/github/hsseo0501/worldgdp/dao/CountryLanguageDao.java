@@ -15,61 +15,64 @@ import java.util.Map;
 @Service
 public class CountryLanguageDao {
 
-    @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+  private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private static final Integer PAGE_SIZE = 10;
+  private static final Integer PAGE_SIZE = 10;
 
-    public List<CountryLanguage> getLanguages(String countryCode, Integer pageNo) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("code", countryCode);
+  @Autowired
+  public CountryLanguageDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+  }
 
-        Integer offset = (pageNo - 1) * PAGE_SIZE;
-        params.put("offset", offset);
-        params.put("size", PAGE_SIZE);
+  public List<CountryLanguage> getLanguages(String countryCode, Integer pageNo) {
+    Map<String, Object> params = new HashMap<String, Object>();
+    params.put("code", countryCode);
 
-        return namedParameterJdbcTemplate.query("SELECT * FROM countrylanguage"
-                        + " WHERE countrycode = :code"
-                        + " ORDER BY percentage DESC "
-                        + " LIMIT :size OFFSET :offset ",
-                params, new CountryLanguageRowMapper());
-    }
+    Integer offset = (pageNo - 1) * PAGE_SIZE;
+    params.put("offset", offset);
+    params.put("size", PAGE_SIZE);
 
-    public void addLanguage(String countryCode, CountryLanguage cl) {
-        namedParameterJdbcTemplate.update("INSERT INTO countrylanguage ( "
-                        + " countrycode, language, isofficial, percentage ) "
-                        + " VALUES ( :country_code, :language, "
-                        + " :is_official, :percentage ) ",
-                getAsMap(countryCode, cl));
-    }
+    return namedParameterJdbcTemplate.query("SELECT * FROM countrylanguage"
+            + " WHERE countrycode = :code"
+            + " ORDER BY percentage DESC "
+            + " LIMIT :size OFFSET :offset ",
+        params, new CountryLanguageRowMapper());
+  }
 
-    public boolean languageExists(String countryCode, String language) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("code", countryCode);
-        params.put("lang", language);
-        Integer langCount = namedParameterJdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM countrylanguage"
-                        + " WHERE countrycode = :code "
-                        + " AND language = :lang", params, Integer.class);
-        return langCount > 0;
-    }
+  public void addLanguage(String countryCode, CountryLanguage cl) {
+    namedParameterJdbcTemplate.update("INSERT INTO countrylanguage ( "
+            + " countrycode, language, isofficial, percentage ) "
+            + " VALUES ( :country_code, :language, "
+            + " :is_official, :percentage ) ",
+        getAsMap(countryCode, cl));
+  }
 
-    public void deleteLanguage(String countryCode, String language) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("code", countryCode);
-        params.put("lang", language);
-        namedParameterJdbcTemplate.update("DELETE FROM countrylanguage "
-                + " WHERE countrycode = :code AND "
-                + " language = :lang ", params);
-    }
+  public boolean languageExists(String countryCode, String language) {
+    Map<String, Object> params = new HashMap<String, Object>();
+    params.put("code", countryCode);
+    params.put("lang", language);
+    Integer langCount = namedParameterJdbcTemplate.queryForObject(
+        "SELECT COUNT(*) FROM countrylanguage"
+            + " WHERE countrycode = :code "
+            + " AND language = :lang", params, Integer.class);
+    return langCount > 0;
+  }
 
-    private Map<String, Object> getAsMap(String countryCode, CountryLanguage
-            cl) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("country_code", countryCode);
-        map.put("language", cl.getLanguage());
-        map.put("is_official", cl.getIsOfficial());
-        map.put("percentage", cl.getPercentage());
-        return map;
-    }
+  public void deleteLanguage(String countryCode, String language) {
+    Map<String, Object> params = new HashMap<String, Object>();
+    params.put("code", countryCode);
+    params.put("lang", language);
+    namedParameterJdbcTemplate.update("DELETE FROM countrylanguage "
+        + " WHERE countrycode = :code AND "
+        + " language = :lang ", params);
+  }
+
+  private Map<String, Object> getAsMap(String countryCode, CountryLanguage cl) {
+    Map<String, Object> map = new HashMap<String, Object>();
+    map.put("country_code", countryCode);
+    map.put("language", cl.getLanguage());
+    map.put("is_official", cl.getIsOfficial());
+    map.put("percentage", cl.getPercentage());
+    return map;
+  }
 }

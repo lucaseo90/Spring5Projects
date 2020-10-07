@@ -18,66 +18,69 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-@SpringJUnitConfig(classes = {
-        TestDBConfiguration.class, CityDao.class})
+@SpringJUnitConfig(classes = {TestDBConfiguration.class, CityDao.class})
 public class CityDaoTest {
 
-    @Autowired
-    private CityDao cityDao;
+  private final CityDao cityDao;
 
-    @Autowired
-    @Qualifier("testTemplate")
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+  @Autowired
+  public CityDaoTest(CityDao cityDao) {
+    this.cityDao = cityDao;
+  }
 
-    @Before
-    public void setup() {
-        cityDao.setNamedParameterJdbcTemplate(namedParameterJdbcTemplate);
-    }
+  @Autowired
+  @Qualifier("testTemplate")
+  private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    @Test
-    public void testGetCities() {
-        List<City> cities = cityDao.getCities("IND", 1);
-        assertThat(cities).hasSize(10);
-    }
+  @Before
+  public void setup() {
+    cityDao.setNamedParameterJdbcTemplate(namedParameterJdbcTemplate);
+  }
 
-    @Test
-    public void testGetCityDetail() {
-        Long cityId = 1024l;
-        City city = cityDao.getCityDetail(cityId);
-        assertThat(city.toString()).isEqualTo("City(id=1024, name=Mumbai (Bombay), "
-                + "countryCode=IND, country=null, district=Maharashtra, population=10500000)");
-    }
+  @Test
+  public void testGetCities() {
+    List<City> cities = cityDao.getCities("IND", 1);
+    assertThat(cities).hasSize(10);
+  }
 
-    @Test
-    public void testAddCity() {
-        String countryCode = "IND";
-        City city = new City();
-        city.setCountryCode(countryCode);
-        city.setDistrict("District");
-        city.setName("City Name");
-        city.setPopulation(101010l);
-        long cityId = cityDao.addCity(countryCode, city);
-        assertThat(cityId).isNotNull();
-        City cityFromDb = cityDao.getCityDetail(cityId);
-        assertThat(cityFromDb).isNotNull();
-        assertThat(cityFromDb.getName()).isEqualTo("City Name");
-    }
+  @Test
+  public void testGetCityDetail() {
+    Long cityId = 1024l;
+    City city = cityDao.getCityDetail(cityId);
+    assertThat(city.toString()).isEqualTo("City(id=1024, name=Mumbai (Bombay), "
+        + "countryCode=IND, country=null, district=Maharashtra, population=10500000)");
+  }
 
-    @Test(expected = EmptyResultDataAccessException.class)
-    public void testDeleteCity() {
-        Long cityId = addCity();
-        cityDao.deleteCity(cityId);
-        City cityFromDb = cityDao.getCityDetail(cityId);
-        assertThat(cityFromDb).isNull();
-    }
+  @Test
+  public void testAddCity() {
+    String countryCode = "IND";
+    City city = new City();
+    city.setCountryCode(countryCode);
+    city.setDistrict("District");
+    city.setName("City Name");
+    city.setPopulation(101010l);
+    long cityId = cityDao.addCity(countryCode, city);
+    assertThat(cityId).isNotNull();
+    City cityFromDb = cityDao.getCityDetail(cityId);
+    assertThat(cityFromDb).isNotNull();
+    assertThat(cityFromDb.getName()).isEqualTo("City Name");
+  }
 
-    private Long addCity() {
-        String countryCode = "IND";
-        City city = new City();
-        city.setCountryCode(countryCode);
-        city.setDistrict("District");
-        city.setName("City Name");
-        city.setPopulation(101010l);
-        return cityDao.addCity(countryCode, city);
-    }
+  @Test(expected = EmptyResultDataAccessException.class)
+  public void testDeleteCity() {
+    Long cityId = addCity();
+    cityDao.deleteCity(cityId);
+    City cityFromDb = cityDao.getCityDetail(cityId);
+    assertThat(cityFromDb).isNull();
+  }
+
+  private Long addCity() {
+    String countryCode = "IND";
+    City city = new City();
+    city.setCountryCode(countryCode);
+    city.setDistrict("District");
+    city.setName("City Name");
+    city.setPopulation(101010l);
+    return cityDao.addCity(countryCode, city);
+  }
 }

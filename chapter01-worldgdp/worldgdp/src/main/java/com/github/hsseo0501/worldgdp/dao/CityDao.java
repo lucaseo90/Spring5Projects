@@ -19,66 +19,70 @@ import java.util.Map;
 @Service
 public class CityDao {
 
-    @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+  private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private static final Integer PAGE_SIZE = 10;
+  @Autowired
+  public CityDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+  }
 
-    public List<City> getCities(String countryCode, Integer pageNo) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("code", countryCode);
-        if (pageNo != null) {
-            Integer offset = (pageNo - 1) * PAGE_SIZE;
-            params.put("offset", offset);
-            params.put("size", PAGE_SIZE);
-        }
-        return namedParameterJdbcTemplate.query("SELECT "
-                        + " id, name, countrycode country_code, district, population "
-                        + " FROM city WHERE countrycode = :code"
-                        + " ORDER BY Population DESC"
-                        + ((pageNo != null) ? " LIMIT :offset , :size " : ""),
-                params, new CityRowMapper());
+  private static final Integer PAGE_SIZE = 10;
+
+  public List<City> getCities(String countryCode, Integer pageNo) {
+    Map<String, Object> params = new HashMap<String, Object>();
+    params.put("code", countryCode);
+    if (pageNo != null) {
+      Integer offset = (pageNo - 1) * PAGE_SIZE;
+      params.put("offset", offset);
+      params.put("size", PAGE_SIZE);
     }
+    return namedParameterJdbcTemplate.query("SELECT "
+            + " id, name, countrycode country_code, district, population "
+            + " FROM city WHERE countrycode = :code"
+            + " ORDER BY Population DESC"
+            + ((pageNo != null) ? " LIMIT :offset , :size " : ""),
+        params, new CityRowMapper());
+  }
 
-    public List<City> getCities(String countryCode) {
-        return getCities(countryCode, null);
-    }
+  public List<City> getCities(String countryCode) {
+    return getCities(countryCode, null);
+  }
 
-    public City getCityDetail(Long cityId) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("id", cityId);
-        return namedParameterJdbcTemplate.queryForObject("SELECT id, "
-                        + " name, countrycode country_code, "
-                        + " district, population "
-                        + " FROM city WHERE id = :id",
-                params, new CityRowMapper());
-    }
+  public City getCityDetail(Long cityId) {
+    Map<String, Object> params = new HashMap<String, Object>();
+    params.put("id", cityId);
+    return namedParameterJdbcTemplate.queryForObject("SELECT id, "
+            + " name, countrycode country_code, "
+            + " district, population "
+            + " FROM city WHERE id = :id",
+        params, new CityRowMapper());
+  }
 
-    public Long addCity(String countryCode, City city) {
-        SqlParameterSource paramSource = new MapSqlParameterSource(
-                getMapForCity(countryCode, city));
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        namedParameterJdbcTemplate.update("INSERT INTO city("
-                        + " name, countrycode, "
-                        + " district, population) "
-                        + " VALUES (:name, :country_code, "
-                        + " :district, :population )",
-                paramSource, keyHolder);
-        return keyHolder.getKey().longValue();
-    }
+  public Long addCity(String countryCode, City city) {
+    SqlParameterSource paramSource = new MapSqlParameterSource(
+        getMapForCity(countryCode, city));
+    KeyHolder keyHolder = new GeneratedKeyHolder();
+    namedParameterJdbcTemplate.update("INSERT INTO city("
+            + " name, countrycode, "
+            + " district, population) "
+            + " VALUES (:name, :country_code, "
+            + " :district, :population )",
+        paramSource, keyHolder);
+    return keyHolder.getKey().longValue();
+  }
 
-    private Map<String, Object> getMapForCity(String countryCode, City city) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("name", city.getName());
-        map.put("country_code", countryCode);
-        map.put("district", city.getDistrict());
-        map.put("population", city.getPopulation());
-        return map;
-    }
+  private Map<String, Object> getMapForCity(String countryCode, City city) {
+    Map<String, Object> map = new HashMap<String, Object>();
+    map.put("name", city.getName());
+    map.put("country_code", countryCode);
+    map.put("district", city.getDistrict());
+    map.put("population", city.getPopulation());
+    return map;
+  }
 
-    public void deleteCity(Long cityId) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("id", cityId);
-        namedParameterJdbcTemplate.update("DELETE FROM city WHERE id = :id", params);
-    }
+  public void deleteCity(Long cityId) {
+    Map<String, Object> params = new HashMap<String, Object>();
+    params.put("id", cityId);
+    namedParameterJdbcTemplate.update("DELETE FROM city WHERE id = :id", params);
+  }
 }

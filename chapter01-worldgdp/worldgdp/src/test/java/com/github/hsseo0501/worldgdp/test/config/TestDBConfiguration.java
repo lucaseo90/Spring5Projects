@@ -11,20 +11,20 @@ import javax.sql.DataSource;
 @Configurable
 public class TestDBConfiguration {
 
-    @Bean
-    public DataSource dataSource() {
-        return new EmbeddedDatabaseBuilder()
-                .generateUniqueName(true)
-                .setType(EmbeddedDatabaseType.H2)
-                .setScriptEncoding("UTF-8")
-                .ignoreFailedDrops(true)
-                .addScript("h2_worldgdp.sql")
-                .build();
-    }
+  @Bean
+  public DataSource dataSource() {
+    return new EmbeddedDatabaseBuilder()
+        .generateUniqueName(true)
+        .setType(EmbeddedDatabaseType.H2)
+        .setScriptEncoding("UTF-8")
+        .ignoreFailedDrops(true)
+        .addScript("h2_worldgdp.sql")
+        .build();
+  }
 
-    @Bean("testTemplate")
-    public NamedParameterJdbcTemplate namedParamJdbcTemplate() {
-        NamedParameterJdbcTemplate namedParamJdbcTemplate = new NamedParameterJdbcTemplate(dataSource());
-        return namedParamJdbcTemplate;
-    }
+  @Bean("testTemplate")
+  public NamedParameterJdbcTemplate namedParamJdbcTemplate() {
+    NamedParameterJdbcTemplate namedParamJdbcTemplate = new NamedParameterJdbcTemplate(dataSource());
+    return namedParamJdbcTemplate;
+  }
 }
