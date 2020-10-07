@@ -3,6 +3,7 @@ package com.github.hsseo0501.worldgdp.dao;
 import com.github.hsseo0501.worldgdp.mapper.CityRowMapper;
 import com.github.hsseo0501.worldgdp.model.City;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -18,6 +19,7 @@ import java.util.Map;
 @Service
 public class CityDao {
 
+    @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private static final Integer PAGE_SIZE = 10;
@@ -65,7 +67,7 @@ public class CityDao {
         return keyHolder.getKey().longValue();
     }
 
-    private Map<String, Object> getMapForCity(String countryCode, City city){
+    private Map<String, Object> getMapForCity(String countryCode, City city) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("name", city.getName());
         map.put("country_code", countryCode);

@@ -186,14 +186,15 @@ index page를 확인하면 URL이 ```http://localhost:18080/worldgdp_war_explode
 ### Reference
 * [[IntelliJ] Export War in IntelliJ and Deploy to Tomcat](https://gmlwjd9405.github.io/2018/12/24/intellij-tomcat-war-deploy.html)
 
-## Defining the view controller
+
+## Defining the view controller and templates
+
+```jackson-bind``` 의존성을 추가해주지 않으면 Controller를 통해 Response 다음과 같은 메시지가 발생한다. 
+```DefaultHandlerExceptionResolver - Resolved [org.springframework.http.converter.HttpMessageNotWritableException: No converter found for return value of type: class java.util.ArrayList]```
 
 ### Reference
-
-
-## Defining the view templates
-
-### Reference
+* [Spring MVC - @PropertySource 사용 중 FileNotFoundException](https://atoz-develop.tistory.com/entry/Spring-MVC-PropertySource-%EC%82%AC%EC%9A%A9-%EC%A4%91-FileNotFoundException-Could-not-open-ServletContext-resource-%EC%97%90%EB%9F%AC)
+* [[SPRING] No converter found for return value of type: class java.util.HashMap(JSON 변환 에러)](https://mine-it-record.tistory.com/3)
 
 
 ## Logging configuration

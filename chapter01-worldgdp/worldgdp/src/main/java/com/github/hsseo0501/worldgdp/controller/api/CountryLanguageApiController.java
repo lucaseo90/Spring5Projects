@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -19,11 +20,11 @@ public class CountryLanguageApiController {
     private CountryLanguageDao cLanguageDao;
 
     @GetMapping("/{countryCode}")
-    public ResponseEntity<?> getLanguages(
-            @PathVariable String countryCode
+    public ResponseEntity<?> getLanguages(@PathVariable String countryCode
             , @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo) {
         try {
-            return ResponseEntity.ok(cLanguageDao.getLanguages(countryCode, pageNo));
+            List<CountryLanguage> countryLanguages = cLanguageDao.getLanguages(countryCode, pageNo);
+            return ResponseEntity.ok(countryLanguages);
         } catch (Exception ex) {
             System.out.println("Error while getting languages for country: {}" + countryCode + ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error while languages cities");

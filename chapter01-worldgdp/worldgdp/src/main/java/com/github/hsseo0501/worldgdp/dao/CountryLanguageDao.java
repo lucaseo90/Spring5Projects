@@ -3,6 +3,7 @@ package com.github.hsseo0501.worldgdp.dao;
 import com.github.hsseo0501.worldgdp.mapper.CountryLanguageRowMapper;
 import com.github.hsseo0501.worldgdp.model.CountryLanguage;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -14,17 +15,19 @@ import java.util.Map;
 @Service
 public class CountryLanguageDao {
 
+    @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private static final Integer PAGE_SIZE = 20;
+    private static final Integer PAGE_SIZE = 10;
 
-    public List<CountryLanguage> getLanguages(String countryCode, Integer
-            pageNo) {
+    public List<CountryLanguage> getLanguages(String countryCode, Integer pageNo) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("code", countryCode);
+
         Integer offset = (pageNo - 1) * PAGE_SIZE;
         params.put("offset", offset);
         params.put("size", PAGE_SIZE);
+
         return namedParameterJdbcTemplate.query("SELECT * FROM countrylanguage"
                         + " WHERE countrycode = :code"
                         + " ORDER BY percentage DESC "

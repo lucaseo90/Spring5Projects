@@ -16,9 +16,10 @@ import java.util.Map;
 @Service
 public class CountryDao {
 
+    @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private static final Integer PAGE_SIZE = 20;
+    private static final Integer PAGE_SIZE = 10;
 
     private static final String SELECT_CLAUSE = "SELECT "
             + " c.Code, "
