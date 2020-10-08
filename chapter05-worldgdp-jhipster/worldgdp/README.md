@@ -1,3 +1,20 @@
+# Contents
+* [Technical requirements](#Technical-requirements)
+* [Introducing JHipster](#Introducing-JHipster)
+* [Installing JHipster](#Installing-JHipster)
+* [Creating an application](#Creating-an-application)
+* [Entity creation](#Entity-creation)
+* [Showing the national gross domestic product](#Showing-the-national-gross-domestic-product)
+* [Other JHipster features](#Other-JHipster-features)
+
+## Technical requirements
+## Introducing JHipster
+## Installing JHipster
+## Creating an application
+## Entity creation
+## Showing the national gross domestic product
+## Other JHipster features
+
 # worldgdp
 
 This application was generated using JHipster 6.10.1, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v6.10.1](https://www.jhipster.tech/documentation-archive/v6.10.1).
