@@ -3,9 +3,8 @@
 * [Defining the data access layer](#Defining-the-data-access-layer)
 * [Defining the API controllers](#Defining-the-API-controllers)
 * [Deploying to Tomcat](#Deploying-to-Tomcat)
-* [Defining the view controller](#Defining-the-view-controller)
-* [Defining the view templates](#Defining-the-view-templates)
-* [Logging configuration](#Logging-configuration)
+* [Defining the view controller and templates](#Defining-the-view-controller-and-templates)
+* [ETC](#ETC)
 
 ## Creating an empty application
 ```bash
