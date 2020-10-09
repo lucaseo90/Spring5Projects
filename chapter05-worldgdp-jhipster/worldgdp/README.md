@@ -9,6 +9,39 @@
 
 ## Technical requirements
 ## Introducing JHipster
+JHipster는 간략하게 설명하면 ```코드 생성 도구```라고 할 수 있다. 웹 애플리케이션 개발 플랫폼으로 다양한 개발, 빌드, 테스트 그리고 배포 프레임워크 또는 플랫폼 도구를 지원한다.
+백엔드는 Spring Framework, 프론트엔드는 Angular, React 그리고 Vue.js (서드파티) 나아가 데브옵스까지 개발자가 소프트웨어 개발을 위해 구성해야 하는 부분을 간소화할 수 있게 한다. 
+
+지원하는 기술들 (```표시```는 내가 주로 사용했던 것들)
+* Build tool: ```Maven```, Gradle
+* Development platform: ```Spring Framework```
+* Security framework: Spring Security
+* Templating: Thymeleaf
+* Microservices: Netflix OSS
+* RDBMS: ```H2```, MySQL, Oracle, ```PostgreSQL```, MS SQL, MariaDB
+* Data streaming: ```Kafka```
+* DB tracker: Liquibase
+* NoSQL: MongoDB, Cassandra, Couchbase, Hazelcast
+* Cache implementation: Infinispan, Ehcache
+* Search engine: ELK(Elasticsearch, Logstash, and Kibana) stack
+* Monitoring: Prometheus
+* ORM: Hibernate
+* Testing framework: Cucumber, Browsersync, Jest, Protractor test
+* Load testing: Gatling
+* UI: Bootstrap, HTML5, CSS3, SaaS, Redux
+* JavaScript framework: Angular, Typescript, React, Webpack
+* Deployment: ```Docker```, ```Kubernetes```, Boxfuse, Rancher
+* CLoud support: Heroku, Cloud Foundry, AWS, OpenShift
+* CI/CD: ```Jenkins```, Travis CI, GitLab CI, CircleCI 
+
+JHipster를 사용하면 프론트엔드 ~ 백엔드 그리고 배포까지 반복되는 작업들을 손쉽게 구성할 수 있다. 예를 들어서 프론트엔드와 백엔드 사이에 데이터베이스 저장을 위한 데이터가 있으면 데이터에
+대해 필수적으로 작성해야 하는 코드들을 프론트엔드 ~ 백엔드 사이에 JHipster를 이용해 구성한 프레임워크에 대한 boilerplate 코드로 자동 생성해준다. 그리고 개발자는 데이터에 대한 비지니스
+로직만 추가함으로써 생산성을 높일 수 있다. 기본적으로 생성된 코드는 ```best practice```를 따르고 있다고 한다. 나아가서 완성한 코드에 대해서 배포에 대해서도 다양한 플랫폼을 지원하도록 
+하고 있어 개발에 있어서 필요한 대부분 작업을 JHipster를 통해 아낄 수 있다.
+> 물론 JHipster가 생성해주는 코드에 대해 알아야 한다는 ```learning curve```는 존재하지만, 유려한 디자인까지는 아니더라도 프론트엔드까지 개발하는 능력을 갖추고 싶다는 욕심을 기반으로
+>스터디를 하는 입장에서 ```best practice```를 따르고 있고 다양한 기술들을 포함하고 있는 부분에서 ```learning curve```를 감안해도 흥미롭게 학습할 수 있는 도구라고 생각한다.
+
+
 ## Installing JHipster
 ## Creating an application
 ## Entity creation
