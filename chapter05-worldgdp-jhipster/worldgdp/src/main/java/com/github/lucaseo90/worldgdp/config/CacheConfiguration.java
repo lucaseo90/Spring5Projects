@@ -50,6 +50,7 @@ public class CacheConfiguration {
             createCache(cm, com.github.lucaseo90.worldgdp.domain.User.class.getName() + ".authorities");
             createCache(cm, com.github.lucaseo90.worldgdp.domain.PersistentToken.class.getName());
             createCache(cm, com.github.lucaseo90.worldgdp.domain.User.class.getName() + ".persistentTokens");
+            createCache(cm, com.github.lucaseo90.worldgdp.domain.Owner.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }
