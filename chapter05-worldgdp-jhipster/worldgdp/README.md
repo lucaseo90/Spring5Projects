@@ -863,6 +863,124 @@ CRUD 기능을 포함하기 위한 노력은 간단하지만 않다. 아래는 E
 
 > JHipster를 활용하여 엔티티를 관리하면, 프론트 엔드 ~ 데이터베이스 사이에 필요한 기본적인 CRUD 기능들을 구현하기 위한 시간 소모보다 비즈니스 로직에 집중할 수 있다. 
 
+### Adding an entity with the CLI 
+JHipster에서 엔티티 추가를 해보자. 엔티티 이름은 `Owner`이며 속성(Attribute)는 `name`만을 갖는다. JHipster는 엔티티를 생성하면 데이터 접근(Data Access), 서비스 
+계층(Service Layer), 컨트롤러 그리고 프론트엔드에 걸쳐 엔티티와 관련된 코드가 생성된다. 아래 명령어를 JHipster로 생성한 프로젝트 경로에서 수행하자.
+
+```shell script
+jhipster entity Owner
+```
+
+```shell script
+$ jhipster entity createdEntity
+INFO! Using JHipster version installed locally in current project's node_modules
+INFO! Executing jhipster:entity createdEntity
+
+The entity createdEntity is being created.
+
+
+Generating field #1
+
+? Do you want to add a field to your entity? Yes
+? What is the name of your field? createdField
+? What is the type of your field? String
+? Do you want to add validation rules to your field? (y/N)
+(base) Lucas-MacBookPro:worldgdp abc$ jhipster entity createdEntity
+INFO! Using JHipster version installed locally in current project's node_modules
+INFO! Executing jhipster:entity createdEntity
+
+The entity createdEntity is being created.
+
+
+Generating field #1
+
+? Do you want to add a field to your entity? Yes
+? What is the name of your field? createdField
+? What is the type of your field? String
+? Do you want to add validation rules to your field? Yes
+? Which validation rules do you want to add? Required, Unique
+
+================= CreatedEntity =================
+Fields
+createdField (String) required unique
+
+
+Generating field #2
+
+? Do you want to add a field to your entity? No
+
+================= CreatedEntity =================
+Fields
+createdField (String) required unique
+
+
+Generating relationships to other entities
+
+? Do you want to add a relationship to another entity? No
+
+================= CreatedEntity =================
+Fields
+createdField (String) required unique
+
+
+
+? Do you want to use separate service class for your business logic? Yes, generate a separate service interface and implementation
+? Do you want to use a Data Transfer Object (DTO)? Yes, generate a DTO with MapStruct
+? Do you want to add filtering? Not needed
+? Is this entity read-only? No
+? Do you want pagination on your entity? Yes, with pagination links
+
+Everything is configured, generating the entity...
+
+... 코드 생성을 하면서 이미 존재하는 파일에 덮어쓸지 등의 질문을 함
+
+```
+
+`git status`로 확인하면 엔티티를 생성하면서 변경이 이루어지거나 새로 추가된 파일을 확인할 수 있다.
+```shell script
+Changes not staged for commit: ... 
+        modified:   .yo-rc.json
+        modified:   README.md
+        modified:   src/main/java/com/github/lucaseo90/worldgdp/config/CacheConfiguration.java
+        modified:   src/main/resources/config/liquibase/master.xml
+        modified:   src/main/webapp/app/entities/entity.module.ts
+        modified:   src/main/webapp/app/layouts/navbar/navbar.component.html
+        modified:   src/main/webapp/i18n/en/global.json
+        modified:   src/main/webapp/i18n/ko/global.json
+
+Untracked files: ...
+        src/main/java/com/github/lucaseo90/worldgdp/domain/CreatedEntity.java
+        src/main/java/com/github/lucaseo90/worldgdp/domain/Owner.java
+        src/main/java/com/github/lucaseo90/worldgdp/repository/CreatedEntityRepository.java
+        src/main/java/com/github/lucaseo90/worldgdp/repository/OwnerRepository.java
+        src/main/java/com/github/lucaseo90/worldgdp/service/CreatedEntityService.java
+        src/main/java/com/github/lucaseo90/worldgdp/service/OwnerService.java
+        src/main/java/com/github/lucaseo90/worldgdp/service/dto/CreatedEntityDTO.java
+        src/main/java/com/github/lucaseo90/worldgdp/service/dto/OwnerDTO.java
+        src/main/java/com/github/lucaseo90/worldgdp/service/impl/
+        src/main/java/com/github/lucaseo90/worldgdp/service/mapper/CreatedEntityMapper.java
+        src/main/java/com/github/lucaseo90/worldgdp/service/mapper/EntityMapper.java
+        src/main/java/com/github/lucaseo90/worldgdp/service/mapper/OwnerMapper.java
+        src/main/java/com/github/lucaseo90/worldgdp/web/rest/CreatedEntityResource.java
+        src/main/java/com/github/lucaseo90/worldgdp/web/rest/OwnerResource.java
+        src/main/resources/config/liquibase/changelog/20201010094153_added_entity_Owner.xml
+        src/main/resources/config/liquibase/changelog/20201011210355_added_entity_CreatedEntity.xml
+        src/main/resources/config/liquibase/fake-data/
+        src/main/webapp/app/entities/owner/
+        src/main/webapp/app/shared/model/
+        src/main/webapp/i18n/en/owner.json
+        src/main/webapp/i18n/ko/owner.json
+        src/test/java/com/github/lucaseo90/worldgdp/domain/
+        src/test/java/com/github/lucaseo90/worldgdp/service/dto/
+        src/test/java/com/github/lucaseo90/worldgdp/service/mapper/CreatedEntityMapperTest.java
+        src/test/java/com/github/lucaseo90/worldgdp/service/mapper/OwnerMapperTest.java
+        src/test/java/com/github/lucaseo90/worldgdp/web/rest/CreatedEntityResourceIT.java
+        src/test/java/com/github/lucaseo90/worldgdp/web/rest/OwnerResourceIT.java
+        src/test/javascript/spec/app/entities/
+```
+
+`추가된 코드 및 수정된 코드에 대해 확인하고 해당 내용 정리`
+
 ## Showing the national gross domestic product
 ## Other JHipster features
 
