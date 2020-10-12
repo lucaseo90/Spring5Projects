@@ -872,11 +872,11 @@ jhipster entity Owner
 ```
 
 ```shell script
-$ jhipster entity createdEntity
+$ jhipster entity Owner
 INFO! Using JHipster version installed locally in current project's node_modules
-INFO! Executing jhipster:entity createdEntity
+INFO! Executing jhipster:entity Owner
 
-The entity createdEntity is being created.
+The entity Owner is being created.
 
 
 Generating field #1
@@ -885,11 +885,11 @@ Generating field #1
 ? What is the name of your field? createdField
 ? What is the type of your field? String
 ? Do you want to add validation rules to your field? (y/N)
-(base) Lucas-MacBookPro:worldgdp abc$ jhipster entity createdEntity
+(base) Lucas-MacBookPro:worldgdp abc$ jhipster entity Owner
 INFO! Using JHipster version installed locally in current project's node_modules
-INFO! Executing jhipster:entity createdEntity
+INFO! Executing jhipster:entity Owner
 
-The entity createdEntity is being created.
+The entity Owner is being created.
 
 
 Generating field #1
@@ -900,7 +900,7 @@ Generating field #1
 ? Do you want to add validation rules to your field? Yes
 ? Which validation rules do you want to add? Required, Unique
 
-================= CreatedEntity =================
+================= Owner =================
 Fields
 createdField (String) required unique
 
@@ -909,7 +909,7 @@ Generating field #2
 
 ? Do you want to add a field to your entity? No
 
-================= CreatedEntity =================
+================= Owner =================
 Fields
 createdField (String) required unique
 
@@ -918,7 +918,7 @@ Generating relationships to other entities
 
 ? Do you want to add a relationship to another entity? No
 
-================= CreatedEntity =================
+================= Owner =================
 Fields
 createdField (String) required unique
 
@@ -949,34 +949,38 @@ Changes not staged for commit: ...
         modified:   src/main/webapp/i18n/ko/global.json
 
 Untracked files: ...
-        src/main/java/com/github/lucaseo90/worldgdp/domain/CreatedEntity.java
         src/main/java/com/github/lucaseo90/worldgdp/domain/Owner.java
-        src/main/java/com/github/lucaseo90/worldgdp/repository/CreatedEntityRepository.java
         src/main/java/com/github/lucaseo90/worldgdp/repository/OwnerRepository.java
-        src/main/java/com/github/lucaseo90/worldgdp/service/CreatedEntityService.java
         src/main/java/com/github/lucaseo90/worldgdp/service/OwnerService.java
-        src/main/java/com/github/lucaseo90/worldgdp/service/dto/CreatedEntityDTO.java
         src/main/java/com/github/lucaseo90/worldgdp/service/dto/OwnerDTO.java
-        src/main/java/com/github/lucaseo90/worldgdp/service/impl/
-        src/main/java/com/github/lucaseo90/worldgdp/service/mapper/CreatedEntityMapper.java
+        src/main/java/com/github/lucaseo90/worldgdp/service/impl/OwnerServiceImpl.java
         src/main/java/com/github/lucaseo90/worldgdp/service/mapper/EntityMapper.java
         src/main/java/com/github/lucaseo90/worldgdp/service/mapper/OwnerMapper.java
-        src/main/java/com/github/lucaseo90/worldgdp/web/rest/CreatedEntityResource.java
         src/main/java/com/github/lucaseo90/worldgdp/web/rest/OwnerResource.java
         src/main/resources/config/liquibase/changelog/20201010094153_added_entity_Owner.xml
-        src/main/resources/config/liquibase/changelog/20201011210355_added_entity_CreatedEntity.xml
-        src/main/resources/config/liquibase/fake-data/
-        src/main/webapp/app/entities/owner/
-        src/main/webapp/app/shared/model/
+        src/main/resources/config/liquibase/fake-data/owner.csv
+        src/main/webapp/app/entities/owner/owner.component.html
+        src/main/webapp/app/entities/owner/owner.component.ts
+        src/main/webapp/app/entities/owner/owner.module.ts
+        src/main/webapp/app/entities/owner/owner.route.ts
+        src/main/webapp/app/entities/owner/owner.service.ts
+        src/main/webapp/app/entities/owner/owner-delete-dialog.component.html
+        src/main/webapp/app/entities/owner/owner-delete-dialog.component.ts
+        src/main/webapp/app/entities/owner/owner-detail.component.html
+        src/main/webapp/app/entities/owner/owner-detail.component.ts
+        src/main/webapp/app/entities/owner/owner-update.component.html
+        src/main/webapp/app/entities/owner/owner-update.component.ts
+        src/main/webapp/app/shared/model/owner.model.ts
         src/main/webapp/i18n/en/owner.json
         src/main/webapp/i18n/ko/owner.json
         src/test/java/com/github/lucaseo90/worldgdp/domain/
         src/test/java/com/github/lucaseo90/worldgdp/service/dto/
-        src/test/java/com/github/lucaseo90/worldgdp/service/mapper/CreatedEntityMapperTest.java
         src/test/java/com/github/lucaseo90/worldgdp/service/mapper/OwnerMapperTest.java
-        src/test/java/com/github/lucaseo90/worldgdp/web/rest/CreatedEntityResourceIT.java
-        src/test/java/com/github/lucaseo90/worldgdp/web/rest/OwnerResourceIT.java
-        src/test/javascript/spec/app/entities/
+        src/test/javascript/spec/app/entities/owner/owner.component.spec.ts
+        src/test/javascript/spec/app/entities/owner/owner.service.spec.ts
+        src/test/javascript/spec/app/entities/owner/owner-delete-dialog.component.spec.ts
+        src/test/javascript/spec/app/entities/owner/owner-detail.component.spec.ts
+        src/test/javascript/spec/app/entities/owner/owner-update.component.spec.ts
 ```
 
 `추가된 코드 및 수정된 코드에 대해 확인하고 해당 내용 정리`
