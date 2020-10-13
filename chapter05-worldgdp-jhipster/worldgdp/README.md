@@ -985,6 +985,181 @@ Untracked files: ...
 
 `추가된 코드 및 수정된 코드에 대해 확인하고 해당 내용 정리`
 
+이제 릴레이션(relationship)이 필요한 엔티티를 추가해보자. 
+
+```shell script
+jhipster entity Car
+```
+
+`실습하고 실습 내용 정리`
+
+### Modeling the entity
+
+#### Modeling with UML
+앞서 CLI를 통해 JHipster로 생성한 애플리케이션에 엔티티를 추가하는 방법을 알아봤다. 앞의 방법을 통해 엔티티가 추가되었을 때, 엔티티와 관련하여 생성되는 코드는 분명 생산성에 도움이 된다. 
+다만 애플리케이션이 포함하는 엔티티의 개수가 적다면 상관없겠지만, 엔티티의 개수가 많아지는 경우 매번 CLI를 통해서 엔티티를 추가하는 경우 문제가 달라진다. JHipster는 다수의 엔티티를 추가하기
+위해서 Modelio, UML Desinger 또는 GenMyModel과 같은 클래스 다이어그램 도구를 통해 설계된 클래스 다이어그램을 XMI 파일로 만들어서(export) 가져올(import) 수 있는 기능을 
+제공한다. 
+
+먼저 `JHipster UML`을 설치한다.
+
+```shell script
+# For global installation
+npm instlal -g jhipster-uml
+
+# For local installation
+npm instlal -g jhipster-uml --dev
+```      
+
+다음 명령을 통해 UML 파일을 가져올 수 있다.
+
+```shell script
+jhipster-uml <class-diagram.xmi>
+```
+
+추가하는 엔티티에 대해서 JHipster는 엔티티의 타입(type)별로 유효성 검증(validation)을 설정해 줄 수 있는데 다음과 같다.
+
+타입 | 가능한 유효성 검증
+--- | ---
+string | required, minlength, maxlength, pattern
+integer, long, BigDecimal, float, double | required, min, max
+enum, Boolean, LocalDate, ZonedDateTime | required
+blob, AnyBlob, ImageBlob, TextBlob | required, minbytes, maxbytes
+
+그리고 앞서 JHipster CLI를 통해서 엔티티를 추가했을 때 DTO, pagination 그리고 service class와 같은 옵션을 확인할 수 있었는데, UML을 가져오는 경우에도 옵션을 사용할 수 있다.
+
+```shell script
+# 엔티티에 대한 DTO의 생성을 원하는 경우, DTO와 엔티티 사이의 변환은 MapStruct를 활용
+jhipster-uml <class-diagram.xmi> --dto <value> 
+
+# 엔티티에 대한 pagination 방법 [pager, pagination, infinite-scroll]
+jhipster-uml <class-diagram.xmi> --paginate <value>
+
+# 엔티티에 대한 비즈니스 로직을 서비스 레이어(service layer)를 구분하여 구현하고자 하는 경우 [serviceClass, serviceImpl]
+jhipster-uml <class-diagram.xmi> --service <value> 
+``` 
+
+이 외에도 엔티티간 릴레이션을 설정하는 등의 기능도 지원하는데, JHipster에서 지원하는 엔티티 사이의 릴레이션은 아래와 같다.
+* A bidirectional one-to-many relationship 
+* A unidirectional many-to-one relationship 
+* A many-to-many relationship
+* A bidirectional one-to-one relationship
+* A unidirectional one-to-one relationship
+
+`undirectional one-to-many` 릴레이션은 JHipster에서 지원하지 않는 대신에, 필요하다면 bidrectional one-to-many 릴레이션을 추천한다.
+
+#### Modeling with JHipster Domain Language Studio
+UML을 이용해 엔티티를 생성하는 기능은 CLI를 이용해 생성하는 기능보다 생산적이며 효율적으로 보인다. 하지만 이 또한 매번 UML 생성을 위한 외부 도구를 이용해 UML을 설계해야 하는 번거로움과
+의존성이 있다. 그리고 JHipster는 버전에 따라 UML을 통해 엔티티를 가져오는 기능에 제한적인 부분이 존재하여 최악의 경우 전혀 호환되지 않는 경우가 발생할 수 있다. 따라서 JHipster를 통해
+엔티티를 관리하는 경우 JDL Studio를 사용하는 것이 가장 좋은 선택이다. JDL Studio는 엔티티를 생성하고, 엔티티 간의 관계를 구성하기 위한 JHipster 팀에서 지원하는 온라인 도구이며, 
+호환성 또한 좋다. 
+
+JDL은 JHipster Domain Language의 약자로, 간단하고 쉬운 구문(Syntax)로 단일 파일(때로는 여러 개의 파일이 될 수도 있다)에서 엔티티를 구성하기 위한 도메인 언어(domain 
+language)다. JDL을 사용하는 방법으로는 잘 알려진 IDE의 플러그인(plugin)으로 설치하거나 온라인 페이지인 [JDL-Studio](https://start.jhipster.tech/jdl-studio/)를
+이용하는 방법이 있다. 
+> Eclipse, Visual Studio Code, Atom 지원, IntelliJ 지원 안 함
+
+다음은 간단한 예제를 JDL-Studio를 이용해 살펴보자.
+```text
+entity School {
+    name String required
+    eduType EducationType required
+    noOfRooms Integer required min(5) max(99)
+}
+   
+enum EducationType {
+    PRIMARY, SECONDARY, HIGHER_SECONDARY
+}
+   
+entity Teacher {
+    name String required
+    age Integer min(21) max(58)
+}
+
+// defining multiple one-to-many relationships with comments
+relationship OneToMany {
+    School{teacher} to Teacher{school(name) required}
+}
+   
+// Set pagination options
+paginate School with infinite-scroll
+paginate Teacher with pagination
+   
+// Use data transfer objects (DTO)
+dto * with mapstruct
+
+// In case if DTO is not required for specific (comma separated)entities.
+// dto * with mapstruct except School
+// Set service options to all except few
+
+service all with serviceImpl
+// In case if service layer is not required for certain  
+// (comma separated) entities. Just uncomment below line
+// service all with serviceImpl except School
+```
+
+![uml in practice](./img/uml-in-practice.png)
+
+키워드에 대해서 살펴보자. 
+entity 키워드: 엔티티를 정의, 덧붙여 엔티티와 관련한 애트리뷰트(attribute) 및 데이터 타입을 정의, 애트리뷰트의 타입과 관련한 유효성 검증도 정의할 수 있음 
+* 이러한 유효성 검증은 데이터베이스 테이블 수준(Database Table Level) 뿐만 아니라 프론트엔드에도 부과(impose)된다. 
+maxlength 키워드: 애트리뷰트의 maximum 컬럼 길이
+min, max 키워드: 애트리뷰트의 min ~ max 값(value)  
+
+엔티티들 사이의 릴레이션은 다음과 같은 구문으로 정의
+
+```text
+relationship (OneToMany | ManyToOne | OneToOne | ManyToMany) {
+    <OWNER entity>[{<Relationship name>[(<Display field>)]}] to <DESTINATION entity>[{<Relationship name>[(<Display field>)]}]
+}
+```
+
+릴레이션은 아래와 같은 다양한 설정을 갖는다. 
+* (OneToMany | ManyToOne | OneToOne | ManyToMany): 릴레이션 종류
+* OWNER entity: 릴레이션의 주체 엔티티(릴레이션의 소스), 릴레이션을 소유하는 엔티티가 왼쪽에 있어야 한다. 
+* DESTINATION entity: 릴레이션의 대상 엔티티(릴레이션의 타겟)
+* Relationship name: 다른쪽 유형을 나타내는 필드의 이름 
+* Display field: 엔터티에 대한 레코드를 추가하는 동안 JHipster는 화면에 다른 측면 엔터티 드롭 다운 메뉴를 표시하는데, 해당 속성은 드롭 다운 메뉴에 표시되는 다른 쪽 엔터티의 필드 이름을 표시, 기본적으로 다른 쪽 엔터티의 ID (기본 키)
+* required: 드롭 다운 메뉴에서 다른 쪽 엔티티를 선택해야하는지 여부를 결정  
+
+엔티티와 연관한 코드 생성을 위한 설정도 있다.
+* paginate: 엔티티에 대한 pagination pattern
+* dto: 엔티티에 대한 DTO 생성할지
+* service: 엔티티에 대한 서비스 계층 생성할지
+  * 상기 3가지 키워드의 경우 엔티티를 포함하고 제외하는데 있어 `with *` 또는 `except`와 같은 키워드를 사용   
+
+
+예제의 경우 bidirectional relationship인데 undirectional relationship이 필요한 경우 아래와 같이 정의한다.
+```text
+relationship OneToMany {
+  School to Teacher
+}
+```
+
+이와 같이 JDL을 사용하는 경우 CLI와 같은 `the question-and-answer-based approach`보다 효율적이며 생산적이다.
+
+##### Generating an entity using a model
+JDL Studio에서 엔티티에 대한 정보를 담고 있는 JDL(.jh) 파일을 내보내기 하여 다운받아, JHipster 프로젝트를 생성한 경로에서, 엔티티에 대한 데이터베이스 테이블과 소스 코드를 생성하자.
+
+```shell script
+jhipster import-jdl <your_jdl_file.jh>
+```
+
+위 명령은 엔티티 정의를 내보내고, 필요한 아티팩트를 생성하기 위해 JDL 파일을 가져온다.
+
+파일을 생성한 후 `mvnw` 명령을 이용해서 성공적으로 빌드 및 배포가 되면 School과 Teacher 엔티티들을 웹페이지의 `Entities` 메뉴에서 확인할 수 있다. 또한 데이터베이스의 변경분도 
+자동으로 반영된다. 
+
+때때로 애플리케이션에 따라 대규모의 엔티티들 포함하면서, 여러 팀에서 협업하여 개발하는 경우도 있을 것이다. 이런 경우를 위해 JHipster는 다수의 JDL 파일을 지원한다. 
+
+`import-jdl` 명령은 변경된 엔티티에 대해서만 재생성을 수행하는데, 만약 모든 엔티티를 다시 처음부터 생성하고 싶다면 `-force` 옵션을 사용하면 된다. 이 경우 생성됐었던 코드의 수정된
+내용은 모두 지워지기 때문에 주의를 필요로 한다. 특정 유효성 검사는 `mvnw` 명령을 통해 애플리케이션을 빌드하고 배포하는 시점에 포착된다.
+* integer, long, BigDecimal, LocalDate, Boolean, enum, double과 같은 타입은 minlength 및 minlength 유효성을 추가할 수 없으나 추가된 경우
+* 만약 서비스 계층(service layer)가 주어진 엔티티를 벗어나는 경우`?(확인 필요)`, JHipster는 경고 메시지를 보여주고 애플리케이션이 잘 동작하지 않을 수 있다.
+  * > 서비스 계층이 연관된 엔티티가 아닌 다른 엔티티에 접근하여 처리하도록 하는 경우를 말하는 건지..? 
+* 한줄짜리 주석을 추가하는 경우 `//` 다음에 스페이스 한 칸을 추가해야 한다. 만약 그렇지 않으면 JHipster는 에러를 보여주고 엔티티를 생성하지 못할 수 있다. 
+
+
 ## Showing the national gross domestic product
 ## Other JHipster features
 
