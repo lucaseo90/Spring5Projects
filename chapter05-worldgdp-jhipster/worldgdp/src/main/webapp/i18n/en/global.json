@@ -8,6 +8,9 @@
       "entities": {
         "main": "Entities",
         "owner": "Owner",
+        "country": "Country",
+        "city": "City",
+        "countryLanguage": "Country Language",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
