@@ -1161,6 +1161,135 @@ jhipster import-jdl <your_jdl_file.jh>
 
 
 ## Showing the national gross domestic product
+엔티티를 생성하는 방법을 알았으니, 이제 1장에서 개발한 나라별 GDP를 확인할 수 있는 `world GDP`(이하 `worldgdp`) 애플리케이션을 JHipster를 활용해 만들어보자. 
+
+### Application and entity creation
+JDL을 이용해 엔티티들을 정의한다. JDL을 사용함으로써 엔티티에 대한 REST 컨트롤러, 서비스 계층 및 DTO 그리고 프론트엔드 계층을 위한 컴포넌트들에 대한 코드를 생성할 수 있다. 다음은 
+JDL를 이용해 worldgdp 애플리케이션에 대한 엔티티를 정의한 스크립트다. 
+
+```text
+entity Country {
+    code String required maxlength(3)
+    name String required maxlength(52)
+    continent Continent required
+    region String required maxlength(26)
+    surfaceArea Float required
+    population Integer required
+    lifeExpectancy Float
+    localName String required maxlength(45)
+    governmentForm String required maxlength(45)
+}
+
+entity City {
+    name String required maxlength(35)
+    district String required maxlength(20)
+    population Integer required
+}
+
+entity CountryLanguage {
+    language String required
+    isOfficial TrueFalse required
+    percentage Float required
+}
+
+enum Continent {
+    ASIA, EUROPE, NORTH_AMERICA, AFRICA, OCEANIA, ANTARCTICA, SOUTH_AMERICA
+}
+
+enum TrueFalse {
+    T, F
+}
+
+// Set pagination options
+paginate Country, City, CountryLanguage with pagination
+
+// Use data transfer objects (DTO)
+dto * with mapstruct
+
+// Set service options. Alternatively 'Service all with sericeImpl can be used
+service all with serviceImpl
+
+relationship OneToMany {
+    Country{city} to City {country(name) required}
+    Country{countryLanguage} to CountryLanguage{country(name) required}
+}
+
+filter Country
+```
+
+![worldgdp uml](./img/worldgdp-uml.png)
+
+상기 스크립트가 포함하는 내용 
+* 엔티티에 대한 테이블과 포함하고 있는 컬럼들에 대한 이름 및 타입 정의
+  * 예) `Country`, `City` 및 `CountryLanguage`
+* 엔티티에서 사용하는 `enum` 타입 
+  * 예) `Continent` 및 `TrueFalse`
+* 엔티티에 대한 pagination pattern, DTO structure 및 service layer (`Service` 클래스와 인터페이스(`ServiceImpl`))에 대한 정의
+* 엔티티들 사이의 릴레이션 관계 예) `Country` 엔티티는 `City` 엔티티와 `CountryLanguage` 엔티티에 대해 one-to-many 관계가 있음을 정의  
+  * 릴레이션에서 `country(name)`은 `Country`의 국가 ID 대신에 국가 이름을 참조로 표시
+* 엔티티에 대한 필터 정의  
+  * 필터가 정의된 `Country` 엔티티는 엔티티에 대한 레코드를 읽어올 때를 위해 다양한 `filtering criteria`를 포함  
+
+Chapter01에서 생성한 테이블에서 몇 개의 컬럼을 생략했으므로, 이러한 부분을 고려하여 삽입(insert) 스크립트에서도 변경이 필요한데, 수정된 [insert script](https://github.com/PacktPublishing/Spring-5.0-Projects/blob/master/Chapter05/gdp/download/gdp_insert_script.sql) 
+를 받아서 이후 내용을 진행하기 전에 적용한다.  
+
+### Handling enumeration data with a database in JHipster
+`mvnw` 명령을 이용해 실행하는 경우 기본적으로 `-Ddev` 옵션으로 실행되어 H2 데이터베이스를 사용하기 때문에, MySQL을 사용하기 위해서는 아래와 같이 `-Pprod` 옵션을 통해 실행되도록 해야 
+한다. 또한 MySQL을 세팅해야 하는데 chapter01에서 생성한 docker 기반 데이터베이스에 새로운 데이터베이스를 생성하여 활용할 것이기 때문에 환경에 설정을 맞춰서 다음 과정을 수행한다.
+
+docker 확인하여 bash 접속
+
+```bash
+docker ps
+docker exec -it ${MYSQL_CONTAINER_NAME} bash
+mysql -uroot -ppwd
+```
+
+데이터베이스 및 유저 생성 그리고 권한 할당
+
+```sql
+CREATE DATABASE worldgdp_jhipster;
+CREATE USER 'worldgdp_service'@'%' IDENTIFIED BY 'worldgdp_password'; # 이미 계정은 생성했기 때문에 수행하지 않아도 됌 
+ALTER USER worldgdp_service@'%' IDENTIFIED WITH mysql_native_password BY 'worldgdp_password'; # 이미 계정은 생성했기 때문에 수행하지 않아도 됌
+GRANT ALL PRIVILEGES ON worldgdp_jhipster.* TO 'worldgdp_service'@'%';
+FLUSH PRIVILEGES;
+```
+
+데이터베이스에 상기 언급한 삽입 스크립트를 이용해 테이블에 데이터를 넣는다.
+
+```shell script
+./mvnw -Pprod
+```
+
+`Entities` 항목에서 `Country`에 대한 정보를 확인하려 하면 아래와 같이 에러가 발생한다.
+```text
+2020-10-14 18:57:53.317 ERROR 30719 --- [ XNIO-1 task-27] o.z.problem.spring.common.AdviceTraits   : Internal Server Error
+
+org.springframework.dao.InvalidDataAccessApiUsageException: No enum constant com.github.lucaseo90.worldgdp.domain.enumeration.Continent.North America; nested exception is java.lang.IllegalArgumentException: No enum constant com.github.lucaseo90.worldgdp.domain.enumeration.Continent.North America...
+```
+
+에러는 열거형(enum) 타입인 Continent 데이터를 읽어올 때 발생하는데, Country 엔티티의 Continent 컬럼이 열거형으로 선언되어 있기 때문에 발생한다. 정확하게는 삽입 스크립트로 추가된 
+데이터가 enum에 정의된 값과 다르기 때문이다. 예로 데이터베이스에는 `North America`로 데이터가 삽입되었는데 열거형으로는 `NORTH_AMERICA`로 정의되어 있으며 `Asia`의 경우에도 
+`ASIA`로 정의되어 있기 때문에 그렇다. 나아가서 Java의 열거형 타입에는 밑줄 문자나 띄어쓰기를 포함할 수 없기 때문에, 데이터베이스의 값과 Java의 열거형 값을 매핑하기 위한 방법이 필요하다. 
+해결책으로 이와 같은 문제를 해결하기 위해 `JPA Attribute Converter`를 활용하면 된다.    
+
+`JPA Attribute Converter`를 이용해 열거형 데이터를 데이터베이스에서 가져와 매핑하도록 하면 에러는 사라진다. 다만 화면에 열거형 데이터가 그대로 출력되는 것을 확인할 수 있다. 이유는
+JHipster는 애플리케이션을 생성할 때 다국어 지원을 위해서 화면에 출력되는 값을 json 파일로 따로 관리한다. 따라서 `/src/main/webapp/app/entities/country`에서 화면에 표시되는 
+값은 키(worldgdpApp.country.home.title)를 통해 값을 참조하는데, 참조해야 하여 출력하는 값을 열거형에 대한 json 파일(`contient.json`)에서 수정하면 된다. 
+
+해당 링크는 상기 과정에 대해 수정된 코드의 변경분이 포함된 커밋이며, 이를 통해 직관적으로 이해할 수 있다.
+[Followed 'Handling enumeration data with a database in JHipster'](https://github.com/lucaseo90/spring5projects/commit/a14b24dd707e9fd1e5f6c8c083fbc34dbe39f4c7)
+
+### Filter provision in service, persistence, and the REST controller layer
+
+#### The persistence layer
+
+#### The service layer
+
+#### The REST controller layer
+
+#### Adding a filter option to existing entities
+
 ## Other JHipster features
 
 # worldgdp
