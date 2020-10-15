@@ -1447,6 +1447,28 @@ URL 패턴은 /api/open으로 구성했으며, 해당 URL은 사용자로 로그
 
 주의할 점은 해당 과정을 거치면 기존 엔티티에 작업한 내용이 모두 되돌아가기(revert) 때문에 작업한 내용을 사용해야 하는 경우 주의해야 한다.
 
+### Developing custom screens
+
+#### The search country screen
+
+##### Creating an Angular service
+
+##### Creating the Angular router
+
+##### Angular modules
+
+##### Creating an Angular component to show the country list
+
+##### Angular template to show the country list
+
+#### Showing the GDP screen
+
+##### An Angular component to show country GDP
+
+##### Angular template to show country GDP
+
+#### Hooking the GDP module into AppModule
+
 ## Other JHipster features
 
 # worldgdp
