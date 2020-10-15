@@ -1281,14 +1281,171 @@ JHipster는 애플리케이션을 생성할 때 다국어 지원을 위해서 �
 [Followed 'Handling enumeration data with a database in JHipster'](https://github.com/lucaseo90/spring5projects/commit/a14b24dd707e9fd1e5f6c8c083fbc34dbe39f4c7)
 
 ### Filter provision in service, persistence, and the REST controller layer
-
-#### The persistence layer
-
-#### The service layer
+애플리케이션의 엔티티를 생성할 때 `Country` 엔티티에 대해 `Filter` 옵션을 추가했는데, JHipster에 의해 해당 옵션을 위해 생성되는 REST controller, service 및 persistence
+계층의 코드를 살펴보자.
 
 #### The REST controller layer
+`code snippet: CountryResource` 
+
+```java
+@GetMapping("/countries")
+@Timed
+public ResponseEntity<List<CountryDTO>> getAllCountries(CountryCriteria criteria, Pageable pageable) {
+    log.debug("REST request to get Countries by criteria: {}", criteria);
+    Page<CountryDTO> page = countryQueryService.findByCriteria(criteria, pageable);
+    HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/countries");
+    return ResponseEntity.ok().headers(headers).body(page.getContent());
+}
+```
+
+* 일부 get 메소드 요청에 대한 메소드에 매개변수로 `CountryCriteria`가 추가되어 있음을 확인
+  * `Criteria` 매개변수는 필터링 연산을 도움
+  * 해당 메소드: getAllCountries, countCountries 
+
+#### The service layer
+`code snippet: CountryQueryService`
+```java
+public Page<CountryDTO> findByCriteria(CountryCriteria criteria, Pageable page) {
+    log.debug("find by criteria : {}, page: {}", criteria, page);
+    final Specification<Country> specification = createSpecification(criteria);
+    return countryRepository.findAll(specification, page).map(countryMapper::toDto);
+}
+```
+
+* JHipster는 `filter` 옵션이 적용된 각각의 엔티티를 위해 POJO(Plain Old Java Object) 클래스를 생성
+  * 해당 클래스는 프론트엔드에서 서비스 계층까지 필터값을 전달하기 위한 용도
+  * 예로 `Country` 엔티티를 위해 JHipster는 `CountryCriteria` 클래스를 제공
+    * 해당 클래스는 도메인 개체 내의 각 연관된 필드에 대해 다양한 필터를 포함
+    * 만약 필터가 적용되지 않으면 모든 엔티티를 읽음(fetch)
+
+`code snippet: ContientFilter`
+```java
+public class CountryCriteria implements Serializable {
+    /**
+     * Class for filtering Continent
+     */
+    public static class ContinentFilter extends Filter<Continent> { }
+    private static final long serialVersionUID = 1L;
+    private LongFilter id;
+    private StringFilter code;
+    private StringFilter name;
+    private ContinentFilter continent;
+    private StringFilter region;
+    private FloatFilter surfaceArea;
+    private IntegerFilter population;
+    private FloatFilter lifeExpectancy;
+    private StringFilter localName;
+    private StringFilter governmentForm;
+    private LongFilter cityId;
+    private LongFilter countryLanguageId;
+    //setters and getters
+}
+```
+
+* JHipster는 각 래퍼 클래스(wrapper class)에 해당하는 다양한 종류의 필터를 생성
+  * 사용자 지정 타입에 대해서는 내부 클래스(inner class)로 확장하여 생성   
+  * `Continet` 속성(attribute)는 `Country` 도메인의 열거형(enum) 타입으로 선언됌
+    * 따라서, JHipster는 해당 속성에 대해 `ContinentFilter`라는 필터 역할의 내부 클래스를 생성
+  * 이 외의 래퍼 클래스의 속성에 대해서는 각자의 필터를 사용
+* 프론트엔드에서 특정 검색 텍스트를 요청 매개변수로 전달
+  * 예) 속성의 이름이 `abc`라고 할때 타입별로 지원되는 연산
+    * string: abc.contains=<seach_text> 
+    * number : abc.greaterThan=<search_text>, abc.lessThan=<search_text>, abc.greaterOrEqualThan=<search_text>, abc.lessOrEqualThan=<search_text>
+    * enum : abc.equals=<search_text>, abc.in=<comma separated search_text values>, abc.specified=true, abc.specified=false  
+
+#### The persistence layer
+`code snippet: CountryRepository`
+```java
+public interface CountryRepository extends JpaRepository<Country, Long>, JpaSpecificationExecutor<Country>
+```
+
+* JHipster는 필터가 적용되어야 하는 엔티티의 저장소(repository) 인터페이스에 `JpaSpecificationExecutor`를 확장
+  * `Spring Data JPA`는 `Specification` 인터페이스를 통해 `criteria query`를 실행할 수 있도록 제공
+    * `criteria query`는 데이터베이스의 테이블 컬럼에 해당하는 다양한 기준(criteria)를 활용해 데이터베이스에서 값을 검색(retrieve)하는 데 사용  
+
+단일 필터 구성(single filter configuration)으로 JHipster는 필요한 모든 변경을 수행한다. 그리고 REST 컨트롤러를 통해 각각의 엔티티에 접근할 때 `Spring Security`에 의해 
+접근 권한을 제약하는 코드가 기본적으로 생성된다.
+
+`code snippet: SecurityConfiguration`
+```java
+public void configure(HttpSecurity http) throws Exception {
+    ....
+    .and()
+        .authorizeRequests()
+        .antMatchers("/api/register").permitAll()
+        .antMatchers("/api/activate").permitAll()
+        .antMatchers("/api/authenticate").permitAll()
+        .antMatchers("/api/account/reset-password/init").permitAll()
+        .antMatchers("/api/account/reset-password/finish").permitAll()
+        .antMatchers("/api/**").authenticated()
+        ....
+}
+```
+
+등록, 활성화, 인증, 비밀번호 재설정 작업을 제외하고 른 모든 URL(api/**)은 로그인한 사용자로 제한된다. worldgdp의 경우 로그인하지 않아도 사용할 수 있게 개발할 것이기 때문에, 이를
+위한 REST 컨트롤러를 다른 URL 주소로 접근하도록 만든다.
+
+`code snippet: GenericRestResource`
+```java
+@RestController
+@RequestMapping("/api/open")
+public class GenericRestResource {
+    private final Logger log = LoggerFactory.getLogger(GenericRestResource.class);
+
+    private final CountryService countryService;
+    private final CountryQueryService countryQueryService;
+
+    public GenericRestResource(CountryQueryService countryQueryService, CountryService countryService) {
+        this.countryQueryService = countryQueryService;
+        this.countryService = countryService;
+    }
+
+    @GetMapping("/search-countries")
+    @Timed
+    public ResponseEntity<List<CountryDTO>> getAllCountriesForGdp(CountryCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get a page of Countries");
+        Page<CountryDTO> page = countryQueryService.findByCriteria(criteria, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(UriComponentsBuilder.newInstance().path("/api/open/search-countries"), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    @GetMapping("/show-gdp/{id}")
+    @Timed
+    public ResponseEntity<CountryDTO> getCountryDetails(@PathVariable Long id) {
+        log.debug("Get Country Details to show GDP information");
+        CountryDTO countryDto = new CountryDTO();
+        Optional<CountryDTO> countryData = countryService.findOne(id);
+        return ResponseEntity.ok().body(countryData.orElse(countryDto));
+    }
+}
+```
+
+* 첫 번째 메소드는 모든 나라를 조회하기 위한 기능
+* 두 번째 선택한 나라의 GDP를 조회하기 위한 기능  
+
+URL 패턴은 /api/open으로 구성했으며, 해당 URL은 사용자로 로그인하지 않아도 접근 가능하게 한다. 이를 위해 추가로 해당 URL 패턴에 대한 접근 허용을 위해 `SecurityConfiguration`
+의 configure 메소드에 다음 코드를 추가한다.  
+
+`code snippet: SecurityConfiguration`
+```java
+.antMatchers("/api/open/**").permitAll()
+```
+
+이제 해당 컨트롤러의 주소는 로그인 하지 않아도 누구나 접근이 가능하다.
 
 #### Adding a filter option to existing entities
+이미 추가됐었던 엔티티에 `filter`를 추가하는 방법은 두 가지가 있다.
+
+* Command Line
+  1. `.jhipster` 폴더의 `<entity_name>.json` (예: Country.json) 파일을 염 
+  2. service 키의 값이 no라면 serviceClass 또는 serviceClassImpl로 변경, `filter`를 활성하기 위한 필수 조건
+  3. jpaMetamodelFiltering 키 값을 true로 변경
+  4. `jhipster entity <entity_name>` 명령을 이용해서 엔티티를 재생성 
+* JDl
+  1. `JDL 스크립트` 파일에 `filter <entity_name>`를 추가 
+  2. `jhipster jhipster-jdl <jdl_file>` 명령을 이용해서 JDL을 다시 가져옴  
+
+주의할 점은 해당 과정을 거치면 기존 엔티티에 작업한 내용이 모두 되돌아가기(revert) 때문에 작업한 내용을 사용해야 하는 경우 주의해야 한다.
 
 ## Other JHipster features
 
