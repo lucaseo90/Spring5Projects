@@ -48,6 +48,12 @@
                         </a>
                     </li>
                     <li>
+                        <a class="dropdown-item" routerLink="country/country-search" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Country-Search</span>
+                        </a>
+                    </li>
+                    <li>
                         <a class="dropdown-item" routerLink="city" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
                             <span jhiTranslate="global.menu.entities.city">City</span>

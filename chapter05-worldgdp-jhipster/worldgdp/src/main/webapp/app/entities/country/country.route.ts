@@ -11,6 +11,7 @@ import { CountryService } from './country.service';
 import { CountryComponent } from './country.component';
 import { CountryDetailComponent } from './country-detail.component';
 import { CountryUpdateComponent } from './country-update.component';
+import {CountrySearchComponent} from "./country-search.component";
 
 @Injectable({ providedIn: 'root' })
 export class CountryResolve implements Resolve<ICountry> {
@@ -75,6 +76,15 @@ export const countryRoute: Routes = [
     resolve: {
       country: CountryResolve,
     },
+    data: {
+      authorities: [Authority.USER],
+      pageTitle: 'worldgdpApp.country.home.title',
+    },
+    canActivate: [UserRouteAccessService],
+  },
+  {
+    path: 'country-search',
+    component: CountrySearchComponent,
     data: {
       authorities: [Authority.USER],
       pageTitle: 'worldgdpApp.country.home.title',
