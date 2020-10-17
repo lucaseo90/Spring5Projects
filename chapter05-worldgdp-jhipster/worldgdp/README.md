@@ -1448,18 +1448,84 @@ URL 패턴은 /api/open으로 구성했으며, 해당 URL은 사용자로 로그
 주의할 점은 해당 과정을 거치면 기존 엔티티에 작업한 내용이 모두 되돌아가기(revert) 때문에 작업한 내용을 사용해야 하는 경우 주의해야 한다.
 
 ### Developing custom screens
+> 들어가기 전에, 내용 따라서 코드 구성하고 그대로 실행하면 돌아가지 않음.  
+>로그인 안 하고 접근 가능한 페이지를 추가하는 데 어려움이 있어서 실제 실습은 `entities`아래 `Country Search` 페이지를 추가해서 진행했다. 페이지 추가하고 criteria 관련한 서버 
+>부분도 고쳐야 할 부분이 있다는 것을 발견한 상태 (@ _@);; 머임…
+
+기본적으로 JHispter는 로그인한 사용자에게만 엔티티를 조회할 수 있도록 한다. 만들고자 하는 애플리케이션은 주어진 국가(Country)별로 GDP를 사용자에게 보여주는 기능을 목적으로 한다. 때문에 
+국가 데이터에 누구나 접근 가능해야 한다. 즉 로그인 하지않아도 조회가 가능해야 한다. 
+>데이터가 Read-only이기 때문에 로그인 안 해도 상관없다는 의미로 받아들여졌다.
 
 #### The search country screen
+전체적으로 국가 엔티티 목록을 보는 화면과 비슷하나 다른 기능들을 포함한다.
+* 로그인하지 않아도 화면을 볼 수 있다.
+* 페이지네이션(pagination)
+* 필터(filter) 
+  * 사용자 검색어
+  * 대륙(continent)
 
 ##### Creating an Angular service
+애플리케이션 화면은 Angular를 이용해서 개발한다. 화면에 데이터를 출력하기 위해서 REST 호출을 통해 데이터베이스에서 데이터를 읽어(fetch)오는 기능이 필요하다. 이를 위해 국가 데이터를 
+읽어오는 Angular 서비스(Service)를 만든다.
+
+`Angular Service Code: 실습 진행 후 추가`
+
+* query 메소드: search-country 컴포넌트(component)에서 전송하는 다양한 매개변수를 국가 정보를 가져오는데 사용
+* HttpClient 모듈: Angular 프레임워크에서 제공되는 모듈로, 새로 생성된 REST 컨트롤러에 대한 REST 호출을 만들기 위해 사용
+* api/open/search-countries URL: REST 컨트롤러 메소드를 호출하기 위한 주소
 
 ##### Creating the Angular router
+Angular 라우터(Router)는 애플리케이션 탐색(navigation) 관리 및 다양한 컴포넌트 사이의 라우팅에 사용한다. 그리고 브라우저 URL을 사용해 특정 컴포넌트를 매핑하며, 브라우저 URL에 대한 다양한 처리를 수행한다.
+* URL 유효성 검사
+* 특정 상황에서 URL 리다이렉션(redirection)
+* URL 세그먼트(segment)에 대한 컴포넌트 결합
+* 접근 가능한 URL인지 검사 (with the set of guards`?`)
+* 연관된 리졸브(associate resolves)를 실행하여 데이터를 동적으로 추가
+* 컴포넌트 활성화 및 탐색
+
+`Angular Router Code: 실습 진행 후 추가`
+
+* 리졸브 클래스와 라우트 배열을 구성
+  * 리졸브는 모든 국가 데이터를 나라 ID 기준으로 사용자가 보기(View) 버튼을 클릭하여 두 번째 화면으로 전환을 시작할 때 읽음
+    * 서비스 컴포넌트를 사용하여 REST 호출을 통해 국가 정보를 가져옴
+  * 라우트 배열은 컴포넌트의  구성 매핑과 컴포넌트가 트리거되는 URL을 보관
+* 해당 Angular 라우터는 두 화면에서 공통으로 사용
 
 ##### Angular modules
+Angular는 모듈식(modular) 프레임워크로, 관련 컴포넌트, 파이프(pipe), 지시문(directive) 및 서비스를 그룹화하여 독립적인 단위를 형성하는 데 모듈을 사용하여, 서로 다른 모듈 간에 
+결합을 통해 애플리케이션을 구성한다. 모듈은 Java 클래스의 public 및 private 메소드가 있는 것처럼 어떠한 컴포넌트, 서비스 및 기타 아티팩트(artifcat)를 다른 모듈에 숨길지 표시할지 
+제어할 수 있다.
+
+`Angular Module Code: 실습 진행 후 추가`
+
+* 해당 모듈의 일부가 되는 모든 컴포넌트와 라우터를 정의
 
 ##### Creating an Angular component to show the country list
+컴포넌트는 Angular 애플리케이션의 기본 구성 요소로 모든 Angular 애플리케이션은 최소한 하나의 컴포넌트를 갖는다. 기본적으로 컴포넌트는 연관된 HTML 템플릿에 데이터를 표시하기 위한 
+애플리케이션 데이터 및 로직을 포함한다.
+
+`Angular Component Code: 실습 진행 후 추가`
+
+* `@Component` 데코레이터를 이용해 생성
+* SearchCountryComponent 클래스는 search-component를 표시
+  * filtering과 pagination에 관련된 변수들을 정의
+* CountryGDPService의 개체를 생성자를 통해 주입 받음(injected)
+  * 데이터를 읽어오기 위한 메소드에서 사용
+  * 생성자는 pagination 변수를 초기화하는데 이는 pagination 기능에 사용
+* Angular는 constructor 호출 후 ngOnInit 메소드를 호출
+  * loadAll() 메소드라는 전체 국가 데이터를 읽어오는 query() 메소드를 호출하는 메소드를 실행
+* query() 메소드는 다양한 pagination 및 filtering 매개 변수를 사용
+* searchCountryCountries(), trackId(), loadPage()와 같은 메소드 들은 search-country 컴포넌트와 직접 연관된 HTML template에서 호출
 
 ##### Angular template to show the country list
+HTML template는 화면에 국가 데이터를 렌더링하는 기능을 수행한다. 각각의 Angular 컴포넌트들은 @Component 데코레이터와 연결된 하나의 HTML 템플릿이 있다.
+
+`Angular Template Code: 실습 진행 후 추가`
+
+* HTML `form`은 filter option을 렌더링
+  * 국가 이름은 text field
+  * 대륙은 drop-down
+* 국가 목록을 하단 부분에 pagination과 함께 표 형태로 출력
 
 #### Showing the GDP screen
 
