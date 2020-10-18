@@ -17,6 +17,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @SpringBootTest
@@ -80,6 +84,9 @@ public class CountryQueryServiceTest {
 
     @Test
     public void getAsiaCountriesWithAfghanistanKeyword() {
+        // criteria value: CountryCriteria{name=StringFilter [contains=Afghanistan, ], continent=ContinentFilter [equals=ASIA, ], }
+        // error occurred value: CountryCriteria{name=StringFilter [contains=Afghanistan, ], continent=ContinentFilter [equals=ASIA, ], }
+        // The two texts are identical
         ContinentFilter continentFilter = new ContinentFilter();
         continentFilter.setEquals(Continent.ASIA);
         StringFilter stringFilter = new StringFilter();
@@ -91,6 +98,22 @@ public class CountryQueryServiceTest {
 
         List<CountryDTO> countries = countryQueryService.findByCriteria(countryCriteria);
         Assert.assertEquals(1, countries.size());
+    }
+
+    @Test
+    public void getAsiaCountriesWithAfghanistanKeywordPageable() {
+        ContinentFilter continentFilter = new ContinentFilter();
+        continentFilter.setEquals(Continent.ASIA);
+        StringFilter stringFilter = new StringFilter();
+        stringFilter.setContains("Afghanistan");
+
+        CountryCriteria countryCriteria = new CountryCriteria();
+        countryCriteria.setContinent(continentFilter);
+        countryCriteria.setName(stringFilter);
+
+        Pageable pageable = PageRequest.of(0, 20, Sort.Direction.DESC, "name");
+        Page<CountryDTO> countries = countryQueryService.findByCriteria(countryCriteria, pageable);
+        Assert.assertEquals(1, countries.getTotalElements());
     }
 
 }
