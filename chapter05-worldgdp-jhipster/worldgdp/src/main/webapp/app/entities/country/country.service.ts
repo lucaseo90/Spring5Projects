@@ -12,6 +12,8 @@ type EntityArrayResponseType = HttpResponse<ICountry[]>;
 @Injectable({ providedIn: 'root' })
 export class CountryService {
   public resourceUrl = SERVER_API_URL + 'api/countries';
+  public searchCountryUrl = SERVER_API_URL + 'api/open/search-countries';
+  public showGDPUrl = SERVER_API_URL + 'api/open/show-gdp';
 
   constructor(protected http: HttpClient) {}
 
@@ -32,7 +34,17 @@ export class CountryService {
     return this.http.get<ICountry[]>(this.resourceUrl, { params: options, observe: 'response' });
   }
 
+  search(req?: any): Observable<EntityArrayResponseType> {
+    const options = createRequestOption(req);
+    return this.http.get<ICountry[]>(this.searchCountryUrl, { params: options, observe: 'response' });
+  }
+
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
+
+  retrieve(id: number): Observable<EntityResponseType> {
+    return this.http.get<ICountry>(`${this.showGDPUrl}/${id}`, { observe: 'response' });
+  }
+
 }

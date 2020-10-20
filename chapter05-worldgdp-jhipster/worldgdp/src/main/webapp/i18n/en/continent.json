@@ -2,6 +2,7 @@
   "worldgdpApp": {
     "Continent": {
       "null": "",
+      "ALL": "All",
       "ASIA": "Asia",
       "EUROPE": "Europe",
       "NORTH_AMERICA": "North America",
