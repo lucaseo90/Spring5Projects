@@ -8,10 +8,11 @@ import { CountryUpdateComponent } from './country-update.component';
 import { CountryDeleteDialogComponent } from './country-delete-dialog.component';
 import { countryRoute } from './country.route';
 import {CountrySearchComponent} from "./country-search.component";
+import {CountryShowGdpComponent} from "./country-show-gdp.component";
 
 @NgModule({
   imports: [WorldgdpSharedModule, RouterModule.forChild(countryRoute)],
-  declarations: [CountryComponent, CountryDetailComponent, CountryUpdateComponent, CountryDeleteDialogComponent, CountrySearchComponent],
+  declarations: [CountryComponent, CountryDetailComponent, CountryUpdateComponent, CountryDeleteDialogComponent, CountrySearchComponent, CountryShowGdpComponent],
   entryComponents: [CountryDeleteDialogComponent],
 })
 export class WorldgdpCountryModule {}
