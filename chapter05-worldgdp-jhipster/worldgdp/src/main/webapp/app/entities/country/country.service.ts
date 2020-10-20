@@ -13,6 +13,7 @@ type EntityArrayResponseType = HttpResponse<ICountry[]>;
 export class CountryService {
   public resourceUrl = SERVER_API_URL + 'api/countries';
   public searchCountryUrl = SERVER_API_URL + 'api/open/search-countries';
+  public showGDPUrl = SERVER_API_URL + 'api/open/show-gdp';
 
   constructor(protected http: HttpClient) {}
 
@@ -41,4 +42,9 @@ export class CountryService {
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
+
+  retrieve(id: number): Observable<EntityResponseType> {
+    return this.http.get<ICountry>(`${this.showGDPUrl}/${id}`, { observe: 'response' });
+  }
+
 }
