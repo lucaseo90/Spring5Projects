@@ -79,6 +79,7 @@ export class CountrySearchComponent implements OnInit {
     this.clear();
   }
 
+
   trackId(index: number, item: ICountry): number | undefined {
     return item.id;
   }
