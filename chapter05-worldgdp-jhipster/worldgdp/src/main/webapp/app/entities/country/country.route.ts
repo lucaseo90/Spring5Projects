@@ -93,7 +93,7 @@ export const countryRoute: Routes = [
     canActivate: [UserRouteAccessService],
   },
   {
-    path: 'country-search/:id/gdp',
+    path: ':id/gdp',
     component: CountryShowGdpComponent,
     resolve: {
       country: CountryResolve,
