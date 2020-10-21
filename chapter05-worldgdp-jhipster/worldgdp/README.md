@@ -1528,12 +1528,57 @@ HTML template는 화면에 국가 데이터를 렌더링하는 기능을 수행�
 * 국가 목록을 하단 부분에 pagination과 함께 표 형태로 출력
 
 #### Showing the GDP screen
+선택된 국가에 대한 GDP 데이터를 그래픽으로 보여주는 화면으로, World Bank API를 이용해 데이터를 JSON 형태로 읽어오고, 해당 데이터를 차트로 표현하기 위해 차트 모듈을 적용한다. 
+해당화면은 첫 번째 스크린을 위해 생성한 서비스, 라우터 및 모듈 아티팩트를 함께 활용한다. 하지만 컴포넌트 및 HTML 템플릿은 해당 화면을 위해 분리되도록 구성한다.
 
 ##### An Angular component to show country GDP
+show-gdp 컴포넌트는 그래프를 렌더링하기 위해 차트 모듈로 JSON 데이터를 전달하기 전에 첫 번째 화면에서 국가 데이터를 가져온다. 그리고 World Bank API를 호출하기 위한 URL을 구성하여 호출하고, JSON 형태의 데이터를 가져온다.
+
+`Angular Component Code: 실습 진행 후 추가`
+
+* 생성자: Angular 라우터에서 선택한 국가를 가져옴
+
+`Angular Resolve Code: 실습 진행 후 추가`
+
+* resolve() 메소드: CountryGDPResolve 클래스의 URL 매개 변수에서 국가 객체를 가져오고, 해당 객체는 다음과 같이 CountryRouter의 구성요소에 대한 설정 구성을 제공했기 때문에 라우터를 통해 해당 컴포넌트를 사용 가능
+
+`WorldBank API URL`
+
+* 국가 정보를 얻기 위해 World Bank API를 호출하기 위한 URL을 생성해야 하는데, 해당 URL의 국가 코드는 라우터를 통해 주어지는 코드로 동적으로 삽입
+* page_per 속성: 해당 연도의 GDP 데이터를 반환
+* JSON 데이터를 가져온 뒤, year과 gdp에 해당하는 두 배열을 준비하여 순회한 뒤 chart 모듈로 전달하여 화면에 chart를 생성
+ * chart 모듈을 사용하기 위해서는 노드 모듈로 설치되어야 한다. `npm install chart.js`
+
+> 단락 정리 필요할 수도 있음
 
 ##### Angular template to show country GDP
+show-gdp 컴포넌트에 대한 템플릿은 chart를 렌더링하고 국가 GDP 데이터를 보여준다. 
+
+`Angular Template Code 실습 진행 후 추가` 
+
+* 선택된 국가에 대한 일부 자세한 정보를 chart의 placeholder에 따라 표시
+* noDataVariable 변수: World Bank API를 호출하는 동안 show-gdp 컴포넌트에 설정되어 선택된 국가의 GDP 데이터가 없는 경우 메시지 표시
 
 #### Hooking the GDP module into AppModule
+이제 구현한 화면을 JHipster 프로젝트 구조에 연결한다. 모든 Angular 애플리케이션은 AppModule(`/src/main/webapp/app/app.module.ts 파일`)이라는 최소한 하나의 
+모듈을 포함하고 있다. 생성한 모듈을 AppModule 내의 @NgModule 아래의 import 선언에 추가한다.
+
+`Angular AppModule Code 실습 진행 후 추가`
+
+애플리케이션에 엔티티를 추가할 때, JHipster는 xxxEntityModule 이라는 모듈을 생성한다. 해당 모듈은 모든 엔티티와 관련된 모든 아티팩트의 참조를 보유하는 엔티티가 생성된 직후 
+JHipster는 해당 모듈 항목을 @NgModule 내부의 import에 추가한다. 이와 같은 방법은 모든 사용자 정의 모듈을 AppModule에 추가하는 방법이다.
+
+### Updating navigation
+마지막으로 GDP 모듈의 실행을 위해 화면에 노출해야 하는데, 가장 좋은 방법은 화면 상단의 내비게이션 모음에 링크를 배치하는 것이다. JHipster는 내비게이션 바를 별도의 모듈로 제공하며 다양한 
+링크를 보여준다. 일부는 공개적으로 표시되고 일부는 로그인이 필요하며, 로그인 후 관리자(Admin)만 접근 가능한 링크도 있다. 링크를 추가하기 위해 내비게이션 템플릿 
+파일(`/src/main/webapp/app/layouts/navbar/navbar.component.html`)을 수정한다.
+
+`Angular navbar Code 실습 진행 후 추가`
+
+* `Countries` 메뉴 아이템에 대한 HTML 코드 추가
+* routerLink: 경로를 위해 필요하며 Countries로 정의
+ * `t=the search-country` 컴포넌트를 트리거하여 필터 옵션이 있는 첫 번째 화면에 해당하는 국가 목록을 표시
+
 
 ## Other JHipster features
 
