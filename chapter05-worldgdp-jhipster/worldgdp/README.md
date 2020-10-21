@@ -1468,7 +1468,22 @@ URL 패턴은 /api/open으로 구성했으며, 해당 URL은 사용자로 로그
 애플리케이션 화면은 Angular를 이용해서 개발한다. 화면에 데이터를 출력하기 위해서 REST 호출을 통해 데이터베이스에서 데이터를 읽어(fetch)오는 기능이 필요하다. 이를 위해 국가 데이터를 
 읽어오는 Angular 서비스(Service)를 만든다.
 
-`Angular Service Code: 실습 진행 후 추가`
+> `Entities` 하위에 `Country-Search` 페이지를 추가함에 따라 `country.service.ts`가 국가 데이터를 읽어오는 Angular 서비스 역할을 한다. 해당 서비스에 
+>`api/open/search-countries`로 국가 데이터를 조회하기 위한 `search` 메소드를 추가한다.
+
+```typescript
+@Injectable({ providedIn: 'root' })
+export class CountryService {
+  public searchCountryUrl = SERVER_API_URL + 'api/open/search-countries';
+ 
+  constructor(protected http: HttpClient) {}
+
+  search(req?: any): Observable<EntityArrayResponseType> {
+    const options = createRequestOption(req);
+    return this.http.get<ICountry[]>(this.searchCountryUrl, { params: options, observe: 'response' });
+  }
+}
+```
 
 * query 메소드: search-country 컴포넌트(component)에서 전송하는 다양한 매개변수를 국가 정보를 가져오는데 사용
 * HttpClient 모듈: Angular 프레임워크에서 제공되는 모듈로, 새로 생성된 REST 컨트롤러에 대한 REST 호출을 만들기 위해 사용
@@ -1483,7 +1498,21 @@ Angular 라우터(Router)는 애플리케이션 탐색(navigation) 관리 및 �
 * 연관된 리졸브(associate resolves)를 실행하여 데이터를 동적으로 추가
 * 컴포넌트 활성화 및 탐색
 
-`Angular Router Code: 실습 진행 후 추가`
+> 생성한 화면에 접근하기 위해서는 화면에 해당하는 컴포넌트의 주소를 Router에 추가해줘야 한다. `country.route.ts`에 `country-search` 화면에 대한 컴포넌트를 추가한다.
+
+```typescript
+export const countryRoute: Routes = [
+  {
+    path: 'country-search',
+    component: CountrySearchComponent,
+    data: {
+      authorities: [Authority.USER],
+      pageTitle: 'worldgdpApp.country.home.title',
+    },
+    canActivate: [UserRouteAccessService],
+  },
+];
+```
 
 * 리졸브 클래스와 라우트 배열을 구성
   * 리졸브는 모든 국가 데이터를 나라 ID 기준으로 사용자가 보기(View) 버튼을 클릭하여 두 번째 화면으로 전환을 시작할 때 읽음
@@ -1496,7 +1525,16 @@ Angular는 모듈식(modular) 프레임워크로, 관련 컴포넌트, 파이프
 결합을 통해 애플리케이션을 구성한다. 모듈은 Java 클래스의 public 및 private 메소드가 있는 것처럼 어떠한 컴포넌트, 서비스 및 기타 아티팩트(artifcat)를 다른 모듈에 숨길지 표시할지 
 제어할 수 있다.
 
-`Angular Module Code: 실습 진행 후 추가`
+> Angular에서 새로 등록한 컴포넌트를 인식하게 하기 위해 모듈(`country.module.ts`)에 등록한다. `declarations`에 추가한다.
+
+```typescript
+@NgModule({
+  imports: [WorldgdpSharedModule, RouterModule.forChild(countryRoute)],
+  declarations: [..., CountrySearchComponent, ...],
+  entryComponents: [CountryDeleteDialogComponent],
+})
+export class WorldgdpCountryModule {}
+```
 
 * 해당 모듈의 일부가 되는 모든 컴포넌트와 라우터를 정의
 
