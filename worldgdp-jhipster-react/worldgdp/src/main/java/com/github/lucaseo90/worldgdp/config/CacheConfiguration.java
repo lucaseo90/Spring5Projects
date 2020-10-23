@@ -50,6 +50,11 @@ public class CacheConfiguration {
             createCache(cm, com.github.lucaseo90.worldgdp.domain.User.class.getName() + ".authorities");
             createCache(cm, com.github.lucaseo90.worldgdp.domain.PersistentToken.class.getName());
             createCache(cm, com.github.lucaseo90.worldgdp.domain.User.class.getName() + ".persistentTokens");
+            createCache(cm, com.github.lucaseo90.worldgdp.domain.Country.class.getName());
+            createCache(cm, com.github.lucaseo90.worldgdp.domain.Country.class.getName() + ".cities");
+            createCache(cm, com.github.lucaseo90.worldgdp.domain.Country.class.getName() + ".countryLanguages");
+            createCache(cm, com.github.lucaseo90.worldgdp.domain.City.class.getName());
+            createCache(cm, com.github.lucaseo90.worldgdp.domain.CountryLanguage.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }
