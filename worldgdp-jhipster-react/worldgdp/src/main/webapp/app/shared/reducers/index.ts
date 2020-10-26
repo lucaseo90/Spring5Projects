@@ -13,6 +13,7 @@ import password, { PasswordState } from 'app/modules/account/password/password.r
 import settings, { SettingsState } from 'app/modules/account/settings/settings.reducer';
 import passwordReset, { PasswordResetState } from 'app/modules/account/password-reset/password-reset.reducer';
 import sessions, { SessionsState } from 'app/modules/account/sessions/sessions.reducer';
+import countries, { CountriesState } from 'app/countries/search/country.reducer';
 // prettier-ignore
 import country, {
   CountryState
@@ -39,6 +40,7 @@ export interface IRootState {
   readonly password: PasswordState;
   readonly settings: SettingsState;
   readonly sessions: SessionsState;
+  readonly countries: CountriesState;
   readonly country: CountryState;
   readonly city: CityState;
   readonly countryLanguage: CountryLanguageState;
@@ -58,6 +60,7 @@ const rootReducer = combineReducers<IRootState>({
   password,
   settings,
   sessions,
+  countries,
   country,
   city,
   countryLanguage,
