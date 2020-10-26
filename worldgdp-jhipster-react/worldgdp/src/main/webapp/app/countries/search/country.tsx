@@ -1,16 +1,18 @@
 import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import {Link, RouteComponentProps} from 'react-router-dom';
-import {Button, Col, Row, Table} from 'reactstrap';
-import {Translate, ICrudGetAllAction, getSortState, IPaginationBaseState, JhiPagination, JhiItemCount} from 'react-jhipster';
+import {Button, Col, Row, Table, Label} from 'reactstrap';
+import {AvFeedback, AvForm, AvGroup, AvInput, AvField} from 'availity-reactstrap-validation';
+import {Translate, ICrudGetAllAction, getSortState, IPaginationBaseState, JhiPagination, JhiItemCount, translate} from 'react-jhipster';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 import {IRootState} from 'app/shared/reducers';
-import {getEntities} from './country.reducer';
+import {getEntities, searchEntities} from './country.reducer';
 import {ICountry} from 'app/shared/model/country.model';
 import {APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT} from 'app/config/constants';
 import {ITEMS_PER_PAGE} from 'app/shared/util/pagination.constants';
 import {overridePaginationStateWithQueryParams} from 'app/shared/util/entity-utils';
+import country from "app/entities/country/country";
 
 export interface ICountryProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {
 }
@@ -20,9 +22,15 @@ export const Country = (props: ICountryProps) => {
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
 
+  const [countryName, setCountryName] = useState();
+
   const getAllEntities = () => {
     props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`);
   };
+
+  const searchEntities = () => {
+    props.searchEntities(countryName, paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`);
+  }
 
   const sortEntities = () => {
     getAllEntities();
@@ -68,7 +76,56 @@ export const Country = (props: ICountryProps) => {
   const {countryList, match, loading, totalItems} = props;
   return (
     <div>
-      <div>Hello country search page</div>
+      <Row md="6" className="justify-content-center">
+        <Col>
+          <Label id="nameLabel" for="country-name">
+            <Translate contentKey="worldgdpApp.country.name">Name</Translate>
+          </Label>
+        </Col>
+        <Col md="4">
+          <AvForm model={countryList}>
+            <AvGroup>
+              <AvField id="country-name" type="text" name="name" value={name}
+                       onChange={({target: {value}}) => setCountryName(value)}
+                       validate={{
+                         required: {value: true, errorMessage: translate('entity.validation.required')},
+                         maxLength: {value: 52, errorMessage: translate('entity.validation.maxlength', {max: 52})},
+                       }}
+              />
+            </AvGroup>
+          </AvForm>
+        </Col>
+        <Col>
+          <Label id="continentLabel" for="country-continent">
+            <Translate contentKey="worldgdpApp.country.continent">Continent</Translate>
+          </Label>
+        </Col>
+        <Col md="2">
+          <AvForm model={countryList}>
+            <AvGroup>
+              <AvInput id="country-continent" type="select" className="form-control" name="continent" value={'ASIA'}>
+                <option value="ASIA">{translate('worldgdpApp.Continent.ASIA')}</option>
+                <option value="EUROPE">{translate('worldgdpApp.Continent.EUROPE')}</option>
+                <option value="NORTH_AMERICA">{translate('worldgdpApp.Continent.NORTH_AMERICA')}</option>
+                <option value="AFRICA">{translate('worldgdpApp.Continent.AFRICA')}</option>
+                <option value="OCEANIA">{translate('worldgdpApp.Continent.OCEANIA')}</option>
+                <option value="ANTARCTICA">{translate('worldgdpApp.Continent.ANTARCTICA')}</option>
+                <option value="SOUTH_AMERICA">{translate('worldgdpApp.Continent.SOUTH_AMERICA')}</option>
+              </AvInput>
+            </AvGroup>
+          </AvForm>
+        </Col>
+        <Col md="1">
+          <Button tag={Link} id="search" to="/countries" replace color="info" onClick={searchEntities}>
+            <FontAwesomeIcon icon="arrow-left"/>
+            &nbsp;
+            <span className="d-none d-md-inline">
+              <Translate contentKey="entity.action.search">Search</Translate>
+            </span>
+          </Button>
+        </Col>
+      </Row>
+
       <h2 id="country-heading">
         <Translate contentKey="worldgdpApp.country.home.title">Countries</Translate>
       </h2>
@@ -171,6 +228,7 @@ const mapStateToProps = ({countries}: IRootState) => ({
 
 const mapDispatchToProps = {
   getEntities,
+  searchEntities
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
