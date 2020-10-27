@@ -7,7 +7,7 @@ import {Translate, ICrudGetAllAction, getSortState, IPaginationBaseState, JhiPag
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 import {IRootState} from 'app/shared/reducers';
-import {getEntities, searchEntities} from './country.reducer';
+import {searchEntities} from './country.reducer';
 import {ICountry} from 'app/shared/model/country.model';
 import {APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT} from 'app/config/constants';
 import {ITEMS_PER_PAGE} from 'app/shared/util/pagination.constants';
@@ -23,10 +23,6 @@ export const Country = (props: ICountryProps) => {
   );
 
   const [countryName, setCountryName] = useState("");
-
-  const getAllEntities = () => {
-    props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`);
-  };
 
   const searchCountries = () => {
     props.searchEntities(countryName, paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`);
@@ -227,7 +223,6 @@ const mapStateToProps = ({countries}: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-  getEntities,
   searchEntities
 };
 
