@@ -28,7 +28,7 @@ export const Country = (props: ICountryProps) => {
     props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`);
   };
 
-  const searchEntities = () => {
+  const searchCountries = () => {
     props.searchEntities(countryName, paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`);
   }
 
@@ -116,7 +116,7 @@ export const Country = (props: ICountryProps) => {
           </AvForm>
         </Col>
         <Col md="1">
-          <Button tag={Link} id="search" to="/countries" replace color="info" onClick={searchEntities}>
+          <Button tag={Link} id="search" to="/countries" replace color="info" onClick={searchCountries}>
             <FontAwesomeIcon icon="arrow-left"/>
             &nbsp;
             <span className="d-none d-md-inline">
@@ -168,24 +168,24 @@ export const Country = (props: ICountryProps) => {
             </tr>
             </thead>
             <tbody>
-            {countryList.map((country, i) => (
+            {countryList.map((countryEntity, i) => (
               <tr key={`entity-${i}`}>
                 <td>
-                  <Button tag={Link} to={`${match.url}/${country.id}`} color="link" size="sm">
-                    {country.id}
+                  <Button tag={Link} to={`${match.url}/${countryEntity.id}`} color="link" size="sm">
+                    {countryEntity.id}
                   </Button>
                 </td>
-                <td>{country.code}</td>
-                <td>{country.name}</td>
+                <td>{countryEntity.code}</td>
+                <td>{countryEntity.name}</td>
                 <td>
-                  <Translate contentKey={`worldgdpApp.Continent.${country.continent}`}/>
+                  <Translate contentKey={`worldgdpApp.Continent.${countryEntity.continent}`}/>
                 </td>
-                <td>{country.region}</td>
-                <td>{country.surfaceArea}</td>
-                <td>{country.population}</td>
-                <td>{country.lifeExpectancy}</td>
-                <td>{country.localName}</td>
-                <td>{country.governmentForm}</td>
+                <td>{countryEntity.region}</td>
+                <td>{countryEntity.surfaceArea}</td>
+                <td>{countryEntity.population}</td>
+                <td>{countryEntity.lifeExpectancy}</td>
+                <td>{countryEntity.localName}</td>
+                <td>{countryEntity.governmentForm}</td>
               </tr>
             ))}
             </tbody>
