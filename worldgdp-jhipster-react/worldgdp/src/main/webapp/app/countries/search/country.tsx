@@ -69,6 +69,12 @@ export const Country = (props: ICountryProps) => {
       activePage: currentPage,
     });
 
+  const handleKeyPress = e => {
+    if (e.key === 'Enter') {
+      searchCountries();
+    }
+  };
+
   const {countryList, match, loading, totalItems} = props;
   return (
     <div>
@@ -83,6 +89,7 @@ export const Country = (props: ICountryProps) => {
             <AvGroup>
               <AvField id="country-name" type="text" name="name" value={name}
                        onChange={({target: {value}}) => setCountryName(value)}
+                       onKeyPress={handleKeyPress}
                        validate={{
                          required: {value: true, errorMessage: translate('entity.validation.required')},
                          maxLength: {value: 52, errorMessage: translate('entity.validation.maxlength', {max: 52})},
