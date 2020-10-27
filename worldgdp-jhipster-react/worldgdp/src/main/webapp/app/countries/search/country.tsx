@@ -22,7 +22,7 @@ export const Country = (props: ICountryProps) => {
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
 
-  const [countryName, setCountryName] = useState();
+  const [countryName, setCountryName] = useState("");
 
   const getAllEntities = () => {
     props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`);
@@ -33,7 +33,7 @@ export const Country = (props: ICountryProps) => {
   }
 
   const sortEntities = () => {
-    getAllEntities();
+    searchCountries();
     const endURL = `?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`;
     if (props.location.search !== endURL) {
       props.history.push(`${props.location.pathname}${endURL}`);
