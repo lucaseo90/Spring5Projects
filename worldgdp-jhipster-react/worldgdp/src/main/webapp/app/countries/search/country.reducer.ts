@@ -72,8 +72,11 @@ const apiUrl = 'api/countries';
 // Actions
 
 export const searchEntities: ICrudSearchAction<ICountry> = (query, page, size, sort) => {
+  const queryJson = JSON.parse(query);
   const requestUrl = `${apiUrl}${
-    sort ? `?name.contains=${query['country-name']}&continent.equals=${query['continent-type']}&page=${page}&size=${size}&sort=${sort}` : ''
+    sort
+      ? `?name.contains=${queryJson['country-name']}&continent.equals=${queryJson['continent-type']}&page=${page}&size=${size}&sort=${sort}`
+      : ''
   }`;
   return {
     type: ACTION_TYPES.FETCH_COUNTRY_LIST,
