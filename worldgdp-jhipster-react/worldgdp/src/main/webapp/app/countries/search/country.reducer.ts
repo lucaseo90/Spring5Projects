@@ -72,7 +72,9 @@ const apiUrl = 'api/countries';
 // Actions
 
 export const searchEntities: ICrudSearchAction<ICountry> = (query, page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?name.contains=${query}&page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}${
+    sort ? `?name.contains=${query['country-name']}&continent.equals=${query['continent-type']}&page=${page}&size=${size}&sort=${sort}` : ''
+  }`;
   return {
     type: ACTION_TYPES.FETCH_COUNTRY_LIST,
     payload: axios.get<ICountry>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),

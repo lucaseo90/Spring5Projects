@@ -24,8 +24,12 @@ export const Country = (props: ICountryProps) => {
 
   const [countryName, setCountryName] = useState("");
 
+  const [continentType, setContinentType] = useState("ASIA");
+
   const searchCountries = () => {
-    props.searchEntities(countryName, paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`);
+    props.searchEntities(
+      JSON.stringify({'country-name': countryName, 'continent-type': continentType}),
+      paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`);
   }
 
   const sortEntities = () => {
@@ -106,7 +110,8 @@ export const Country = (props: ICountryProps) => {
         <Col md="2">
           <AvForm model={countryList}>
             <AvGroup>
-              <AvInput id="country-continent" type="select" className="form-control" name="continent" value={'ASIA'}>
+              <AvInput id="country-continent" type="select" className="form-control" name="continent" value={'ASIA'}
+                       onChange={({target: {value}}) => setContinentType(value)}>
                 <option value="ASIA">{translate('worldgdpApp.Continent.ASIA')}</option>
                 <option value="EUROPE">{translate('worldgdpApp.Continent.EUROPE')}</option>
                 <option value="NORTH_AMERICA">{translate('worldgdpApp.Continent.NORTH_AMERICA')}</option>
