@@ -29,10 +29,8 @@ export const CountryGdp = (props: ICountryGdpProps) => {
 
   const getCountryGdp = async (code : string) => {
     const gdpUrl = preGDPUrl + code + postGDPUrl;
-    console.log("gdbUrl: " + gdpUrl);
-    const httpHandler = require('react-http-client');
-    const getResponse = await httpHandler.get(gdpUrl);
-    console.log(getResponse);
+    const response = await fetch(gdpUrl);
+    const data = await response.json();
   }
 
   const { countryEntity } = props;
