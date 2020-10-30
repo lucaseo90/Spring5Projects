@@ -10,13 +10,30 @@ import { getEntity } from './country.reducer';
 import { ICountry } from 'app/shared/model/country.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import {VictoryLine, VictoryChart} from "victory";
+import httpClient from 'react-http-client';
+import construct = Reflect.construct;
 
 export interface ICountryGdpProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export const CountryGdp = (props: ICountryGdpProps) => {
+
+  const preGDPUrl = 'http://api.worldbank.org/v2/countries/';
+  const postGDPUrl = '/indicators/NY.GDP.MKTP.CD?format=json&per_page=' + 10;
+  const year = [];
+  const gdp = [];
+
   useEffect(() => {
     props.getEntity(props.match.params.id);
   }, []);
+
+
+  const getCountryGdp = async (code : string) => {
+    const gdpUrl = preGDPUrl + code + postGDPUrl;
+    console.log("gdbUrl: " + gdpUrl);
+    const httpHandler = require('react-http-client');
+    const getResponse = await httpHandler.get(gdpUrl);
+    console.log(getResponse);
+  }
 
   const { countryEntity } = props;
   return (
@@ -81,6 +98,10 @@ export const CountryGdp = (props: ICountryGdpProps) => {
           </dt>
           <dd>{countryEntity.governmentForm}</dd>
         </dl>
+        <Button onClick={() => getCountryGdp(countryEntity.code)} replace color="info">
+          <FontAwesomeIcon icon="arrow-left" />{' '}
+          <span className="d-none d-md-inline">Test</span>
+        </Button>
         <Button tag={Link} to="/countries" replace color="info">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
