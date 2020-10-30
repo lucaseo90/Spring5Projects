@@ -9,6 +9,7 @@ import { IRootState } from 'app/shared/reducers';
 import { getEntity } from './country.reducer';
 import { ICountry } from 'app/shared/model/country.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import {VictoryLine, VictoryChart} from "victory";
 
 export interface ICountryGdpProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
@@ -20,9 +21,9 @@ export const CountryGdp = (props: ICountryGdpProps) => {
   const { countryEntity } = props;
   return (
     <Row>
-      <Col md="8">
-        <h2>
-          <Translate contentKey="worldgdpApp.country.detail.title">Country</Translate> [<b>{countryEntity.id}</b>]
+      <Col md="4">
+        <h2 id="page-heading">
+          <Translate contentKey="worldgdpApp.country.detail.title">Country</Translate> [<b>{countryEntity.name}</b>]
         </h2>
         <dl className="jh-entity-details">
           <dt>
@@ -86,6 +87,19 @@ export const CountryGdp = (props: ICountryGdpProps) => {
             <Translate contentKey="entity.action.back">Back</Translate>
           </span>
         </Button>
+      </Col>
+      <Col md="8">
+        <VictoryChart>
+          <VictoryLine
+            data={[
+              { x: 1, y: 2 },
+              { x: 2, y: 3 },
+              { x: 3, y: 5 },
+              { x: 4, y: 4 },
+              { x: 5, y: 7 }
+            ]}
+          />
+        </VictoryChart>
       </Col>
     </Row>
   );
