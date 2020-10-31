@@ -19,18 +19,45 @@ export const CountryGdp = (props: ICountryGdpProps) => {
 
   const preGDPUrl = 'http://api.worldbank.org/v2/countries/';
   const postGDPUrl = '/indicators/NY.GDP.MKTP.CD?format=json&per_page=' + 10;
-  const year = [];
-  const gdp = [];
+  let year = [];
+  let gdp = [];
+  let chartData = [];
 
   useEffect(() => {
     props.getEntity(props.match.params.id);
   }, []);
 
-
   const getCountryGdp = async (code : string) => {
     const gdpUrl = preGDPUrl + code + postGDPUrl;
     const response = await fetch(gdpUrl);
     const data = await response.json();
+    const gdpDataArr = data[1];
+
+    let obj = "[";
+    if (gdpDataArr) {
+      gdpDataArr.forEach((y: { date; value; }) => {
+        year.push(y.date);
+        gdp.push(y.value);
+      });
+      year = year.reverse();
+      gdp = gdp.reverse();
+      console.log(year);
+      console.log(gdp);
+
+      console.log(year.length);
+      for (let i = 0; i < year.length; i++) {
+        console.log(year[i]);
+        console.log(gdp[i]);
+        obj = obj.concat("{ \"x\":").concat(year[i]).concat(", \"y\": ").concat(gdp[i]).concat("}");
+        if( i !== year.length - 1) {
+          obj = obj.concat(",")
+        }
+      }
+      obj = obj.concat("]");
+      console.log("json string : " + obj);
+    }
+    chartData = JSON.parse(obj);
+    console.log(chartData);
   }
 
   const { countryEntity } = props;
@@ -110,13 +137,9 @@ export const CountryGdp = (props: ICountryGdpProps) => {
       <Col md="8">
         <VictoryChart>
           <VictoryLine
-            data={[
-              { x: 1, y: 2 },
-              { x: 2, y: 3 },
-              { x: 3, y: 5 },
-              { x: 4, y: 4 },
-              { x: 5, y: 7 }
-            ]}
+            data={chartData}
+            x="GDP"
+            y="years"
           />
         </VictoryChart>
       </Col>
