@@ -9,9 +9,8 @@ import { IRootState } from 'app/shared/reducers';
 import { getEntity } from './country.reducer';
 import { ICountry } from 'app/shared/model/country.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
-import {VictoryLine, VictoryChart} from "victory";
-import httpClient from 'react-http-client';
 import construct = Reflect.construct;
+import CountryGdpChart from "./country-gdp-chart";
 
 export interface ICountryGdpProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
@@ -135,13 +134,7 @@ export const CountryGdp = (props: ICountryGdpProps) => {
         </Button>
       </Col>
       <Col md="8">
-        <VictoryChart>
-          <VictoryLine
-            data={chartData}
-            x="GDP"
-            y="years"
-          />
-        </VictoryChart>
+        <CountryGdpChart/>
       </Col>
     </Row>
   );
