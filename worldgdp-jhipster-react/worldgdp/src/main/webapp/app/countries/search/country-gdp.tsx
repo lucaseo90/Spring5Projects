@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
@@ -10,7 +10,7 @@ import { getEntity } from './country.reducer';
 import { ICountry } from 'app/shared/model/country.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import construct = Reflect.construct;
-import CountryGdpChart from "./country-gdp-chart";
+import {VictoryChart, VictoryLine, VictoryTheme} from "victory";
 
 export interface ICountryGdpProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
@@ -20,7 +20,8 @@ export const CountryGdp = (props: ICountryGdpProps) => {
   const postGDPUrl = '/indicators/NY.GDP.MKTP.CD?format=json&per_page=' + 10;
   let year = [];
   let gdp = [];
-  let chartData = [];
+
+  const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
     props.getEntity(props.match.params.id);
@@ -55,7 +56,7 @@ export const CountryGdp = (props: ICountryGdpProps) => {
       obj = obj.concat("]");
       console.log("json string : " + obj);
     }
-    chartData = JSON.parse(obj);
+    setChartData(JSON.parse(obj));
     console.log(chartData);
   }
 
@@ -134,7 +135,11 @@ export const CountryGdp = (props: ICountryGdpProps) => {
         </Button>
       </Col>
       <Col md="8">
-        <CountryGdpChart/>
+        <VictoryChart theme={VictoryTheme.material}>
+          <VictoryLine
+            data={chartData}
+          />
+        </VictoryChart>
       </Col>
     </Row>
   );
