@@ -10,7 +10,7 @@ import { getEntity } from './country.reducer';
 import { ICountry } from 'app/shared/model/country.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import construct = Reflect.construct;
-import {VictoryChart, VictoryLine, VictoryTheme} from "victory";
+import {VictoryChart, VictoryLine, VictoryTheme, VictoryAxis, VictoryLabel} from "victory";
 
 export interface ICountryGdpProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string, code: string }> {}
 
@@ -125,10 +125,19 @@ export const CountryGdp = (props: ICountryGdpProps) => {
         </Button>
       </Col>
       <Col md="4">
-        <VictoryChart theme={VictoryTheme.material}>
+        <VictoryChart theme={VictoryTheme.material} >
           <VictoryLine
             data={chartData}
           />
+          <VictoryAxis
+            dependentAxis
+            label={"GDP (100,000$)"}
+            axisLabelComponent={<VictoryLabel dy={-128} angle={0}/>}>
+          </VictoryAxis>
+          <VictoryAxis
+            label={"year"}
+            axisLabelComponent={<VictoryLabel dy={25}/>}>
+          </VictoryAxis>
         </VictoryChart>
       </Col>
     </Row>
