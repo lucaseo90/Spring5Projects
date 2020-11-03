@@ -12,20 +12,16 @@ import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import construct = Reflect.construct;
 import {VictoryChart, VictoryLine, VictoryTheme} from "victory";
 
-export interface ICountryGdpProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export interface ICountryGdpProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string, code: string }> {}
 
 export const CountryGdp = (props: ICountryGdpProps) => {
 
   const preGDPUrl = 'http://api.worldbank.org/v2/countries/';
   const postGDPUrl = '/indicators/NY.GDP.MKTP.CD?format=json&per_page=' + 20;
-  let year = [];
-  let gdp = [];
+  const year = [];
+  const gdp = [];
 
   const [chartData, setChartData] = useState([]);
-
-  useEffect(() => {
-    props.getEntity(props.match.params.id);
-  }, []);
 
   const getCountryGdp = async (code : string) => {
     const gdpUrl = preGDPUrl + code + postGDPUrl;
@@ -41,19 +37,22 @@ export const CountryGdp = (props: ICountryGdpProps) => {
       });
 
       for (let i = year.length - 1; i > 0; i--) {
-        console.log(year[i]);
-        console.log(gdp[i]);
         obj = obj.concat("{ \"x\":").concat(year[i]).concat(", \"y\": ").concat(String(gdp[i] / 1000 / 1000)).concat("}");
         if (i !== 1) {
           obj = obj.concat(",")
         }
       }
       obj = obj.concat("]");
-      console.log("json string : " + obj);
     }
     setChartData(JSON.parse(obj));
-    console.log(chartData);
   }
+
+  useEffect(() => {
+    props.getEntity(props.match.params.id);
+    getCountryGdp(props.match.params.code);
+  }, []);
+
+
 
   const { countryEntity } = props;
   return (
@@ -118,10 +117,6 @@ export const CountryGdp = (props: ICountryGdpProps) => {
           </dt>
           <dd>{countryEntity.governmentForm}</dd>
         </dl>
-        <Button onClick={() => getCountryGdp(countryEntity.code)} replace color="info">
-          <FontAwesomeIcon icon="arrow-left" />{' '}
-          <span className="d-none d-md-inline">Test</span>
-        </Button>
         <Button tag={Link} to="/countries" replace color="info">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">

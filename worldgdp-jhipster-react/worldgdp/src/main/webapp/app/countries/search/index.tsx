@@ -9,7 +9,7 @@ import CountryGdp from "./country-gdp";
 const Routes = ({match}) => (
   <>
     <Switch>
-      <ErrorBoundaryRoute exact path={`${match.url}/:id`} component={CountryGdp}/>
+      <ErrorBoundaryRoute exact path={`${match.url}/:id/:code`} component={CountryGdp}/>
       <ErrorBoundaryRoute path={match.url} component={Country}/>
     </Switch>
   </>

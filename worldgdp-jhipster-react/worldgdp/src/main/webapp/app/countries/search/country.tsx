@@ -179,7 +179,7 @@ export const Country = (props: ICountryProps) => {
             {countryList.map((countryEntity, i) => (
               <tr key={`entity-${i}`}>
                 <td>
-                  <Button tag={Link} to={`${match.url}/${countryEntity.id}`} color="link" size="sm">
+                  <Button tag={Link} to={`${match.url}/${countryEntity.id}/${countryEntity.code}`} color="link" size="sm">
                     {countryEntity.id}
                   </Button>
                 </td>
