@@ -17,7 +17,7 @@ export interface ICountryGdpProps extends StateProps, DispatchProps, RouteCompon
 export const CountryGdp = (props: ICountryGdpProps) => {
 
   const preGDPUrl = 'http://api.worldbank.org/v2/countries/';
-  const postGDPUrl = '/indicators/NY.GDP.MKTP.CD?format=json&per_page=' + 10;
+  const postGDPUrl = '/indicators/NY.GDP.MKTP.CD?format=json&per_page=' + 20;
   let year = [];
   let gdp = [];
 
@@ -39,17 +39,12 @@ export const CountryGdp = (props: ICountryGdpProps) => {
         year.push(y.date);
         gdp.push(y.value);
       });
-      year = year.reverse();
-      gdp = gdp.reverse();
-      console.log(year);
-      console.log(gdp);
 
-      console.log(year.length);
-      for (let i = 0; i < year.length; i++) {
+      for (let i = year.length - 1; i > 0; i--) {
         console.log(year[i]);
         console.log(gdp[i]);
-        obj = obj.concat("{ \"x\":").concat(year[i]).concat(", \"y\": ").concat(gdp[i]).concat("}");
-        if( i !== year.length - 1) {
+        obj = obj.concat("{ \"x\":").concat(year[i]).concat(", \"y\": ").concat(String(gdp[i] / 1000 / 1000)).concat("}");
+        if (i !== 1) {
           obj = obj.concat(",")
         }
       }
@@ -63,7 +58,7 @@ export const CountryGdp = (props: ICountryGdpProps) => {
   const { countryEntity } = props;
   return (
     <Row>
-      <Col md="4">
+      <Col md="3">
         <h2 id="page-heading">
           <Translate contentKey="worldgdpApp.country.detail.title">Country</Translate> [<b>{countryEntity.name}</b>]
         </h2>
@@ -134,7 +129,7 @@ export const CountryGdp = (props: ICountryGdpProps) => {
           </span>
         </Button>
       </Col>
-      <Col md="8">
+      <Col md="4">
         <VictoryChart theme={VictoryTheme.material}>
           <VictoryLine
             data={chartData}
