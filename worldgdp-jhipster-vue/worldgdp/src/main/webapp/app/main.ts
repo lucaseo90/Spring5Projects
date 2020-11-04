@@ -29,6 +29,9 @@ import ConfigurationService from '@/admin/configuration/configuration.service';
 
 /* tslint:disable */
 
+import CountryService from '@/entities/country/country.service';
+import CityService from '@/entities/city/city.service';
+import CountryLanguageService from '@/entities/country-language/country-language.service';
 // jhipster-needle-add-entity-service-to-main-import - JHipster will import entities services here
 
 /* tslint:enable */
@@ -91,6 +94,9 @@ new Vue({
     metricsService: () => new MetricsService(),
     alertService: () => alertService,
     translationService: () => translationService,
+    countryService: () => new CountryService(),
+    cityService: () => new CityService(),
+    countryLanguageService: () => new CountryLanguageService(),
     // jhipster-needle-add-entity-service-to-main - JHipster will import entities services here
     accountService: () => accountService,
   },
