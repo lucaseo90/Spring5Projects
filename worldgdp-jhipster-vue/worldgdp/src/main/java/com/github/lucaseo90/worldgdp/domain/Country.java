@@ -1,5 +1,6 @@
 package com.github.lucaseo90.worldgdp.domain;
 
+import com.github.lucaseo90.worldgdp.domain.enumeration.converter.ContinentEnumConvertor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -37,7 +38,7 @@ public class Country implements Serializable {
     private String name;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = ContinentEnumConvertor.class)
     @Column(name = "continent", nullable = false)
     private Continent continent;
 
