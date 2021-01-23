@@ -32,6 +32,11 @@ public class DesignController {
         this.ingredientRepo = ingredientRepo;
     }
 
+    @ModelAttribute(name = "taco")
+    public Taco taco() {
+        return new Taco();
+    }
+
     @GetMapping
     public String showDesignForm(Model model) {
         List<Ingredient> ingredients = new ArrayList<>();
