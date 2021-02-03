@@ -3,34 +3,23 @@ package com.example.tacocloud.repository;
 import com.example.tacocloud.model.Ingredient;
 import com.example.tacocloud.model.Taco;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@JdbcTest
-@Sql({"classpath:schema.sql", "classpath:test-data.sql"})
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DataJpaTest
+@Sql({"classpath:test-data.sql"})
 public class TacoRepositoryTest {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     private TacoRepository tacoRepository;
 
+    @Autowired
     private IngredientRepository ingredientRepository;
-
-    @BeforeAll
-    public void setup() {
-        this.tacoRepository = new JdbcTacoRepository(jdbcTemplate);
-        this.ingredientRepository = new JdbcIngredientRepository(jdbcTemplate);
-    }
 
     @Test
     public void testSave() {
@@ -38,8 +27,8 @@ public class TacoRepositoryTest {
         taco.setName("test taco");
 
         List<Ingredient> ingredients = new ArrayList<>();
-        ingredients.add(ingredientRepository.findOne("FLTO"));
-        ingredients.add(ingredientRepository.findOne("GRBF"));
+        ingredients.add(ingredientRepository.findById("FLTO").get());
+        ingredients.add(ingredientRepository.findById("GRBF").get());
         taco.setIngredients(ingredients);
         Taco savedTaco = tacoRepository.save(taco);
 

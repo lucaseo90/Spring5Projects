@@ -3,40 +3,29 @@ package com.example.tacocloud.repository;
 import com.example.tacocloud.model.Ingredient;
 import com.example.tacocloud.model.Order;
 import com.example.tacocloud.model.Taco;
+import org.aspectj.weaver.ast.Or;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-@JdbcTest
-@Sql({"classpath:schema.sql", "classpath:test-data.sql"})
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DataJpaTest
+@Sql({"classpath:test-data.sql"})
 public class OrderRepositoryTest {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     private TacoRepository tacoRepository;
 
+    @Autowired
     private IngredientRepository ingredientRepository;
 
+    @Autowired
     private OrderRepository orderRepository;
-
-    private Taco savedTaco;
-
-    @BeforeAll
-    public void setup() {
-        this.tacoRepository = new JdbcTacoRepository(jdbcTemplate);
-        this.ingredientRepository = new JdbcIngredientRepository(jdbcTemplate);
-        this.orderRepository = new JdbcOrderRepository(jdbcTemplate);
-    }
 
     @Test
     public void testSave() {
@@ -44,8 +33,8 @@ public class OrderRepositoryTest {
         taco.setName("test taco");
 
         List<Ingredient> ingredients = new ArrayList<>();
-        ingredients.add(ingredientRepository.findOne("FLTO"));
-        ingredients.add(ingredientRepository.findOne("GRBF"));
+        ingredients.add(ingredientRepository.findById("FLTO").get());
+        ingredients.add(ingredientRepository.findById("GRBF").get());
         taco.setIngredients(ingredients);
 
         Taco savedTaco = tacoRepository.save(taco);
@@ -67,8 +56,8 @@ public class OrderRepositoryTest {
 
         Order savedOrder = orderRepository.save(order);
 
-        Assertions.assertEquals(1, savedOrder.getTacos().get(0).getId());
-        Assertions.assertEquals(1, savedOrder.getId());
+        Assertions.assertEquals("test taco", savedOrder.getTacos().get(0).getName());
+        Assertions.assertEquals(2, savedOrder.getTacos().get(0).getIngredients().size());
 
         Assertions.assertEquals("Lucas", savedOrder.getDeliveryName());
         Assertions.assertEquals("testStreet", savedOrder.getDeliveryStreet());
@@ -78,9 +67,5 @@ public class OrderRepositoryTest {
         Assertions.assertEquals("1111211131114111", savedOrder.getCcNumber());
         Assertions.assertEquals("21/02", savedOrder.getCcExpiration());
         Assertions.assertEquals("987", savedOrder.getCcCVV());
-
-        Order secondSavedOrder = orderRepository.save(order);
-        Assertions.assertEquals(2, secondSavedOrder.getId());
-
     }
 }

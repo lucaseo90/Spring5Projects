@@ -2,10 +2,10 @@ package com.example.tacocloud.repository;
 
 import com.example.tacocloud.model.Ingredient;
 import com.example.tacocloud.model.Ingredient.Type;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.ArrayList;
@@ -13,20 +13,12 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@JdbcTest
-@Sql({"classpath:schema.sql", "classpath:test-data.sql"})
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DataJpaTest
+@Sql({"classpath:test-data.sql"})
 public class IngredientRepositoryTest {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     private IngredientRepository ingredientRepository;
-
-    @BeforeAll
-    public void setup() {
-        this.ingredientRepository = new JdbcIngredientRepository(jdbcTemplate);
-    }
 
     @Test
     public void testFindAll() {
@@ -38,11 +30,11 @@ public class IngredientRepositoryTest {
 
     @Test
     public void testFindOne() {
-        Ingredient foundIngredientFLTO = ingredientRepository.findOne("FLTO");
+        Ingredient foundIngredientFLTO = ingredientRepository.findById("FLTO").get();
         assertEquals("Flour Tortilla", foundIngredientFLTO.getName());
         assertEquals(Type.WRAP, foundIngredientFLTO.getType());
 
-        Ingredient foundIngredientGRBF = ingredientRepository.findOne("GRBF");
+        Ingredient foundIngredientGRBF = ingredientRepository.findById("GRBF").get();
         assertEquals("Ground Beef", foundIngredientGRBF.getName());
         assertEquals(Type.PROTEIN, foundIngredientGRBF.getType());
     }
