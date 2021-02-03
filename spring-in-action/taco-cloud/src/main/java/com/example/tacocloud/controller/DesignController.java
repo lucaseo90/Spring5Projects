@@ -24,13 +24,13 @@ import java.util.stream.Collectors;
 @SessionAttributes("order")
 public class DesignController {
 
-    private final IngredientRepository ingredientRepo;
+    private final IngredientRepository ingredientRepository;
 
     private final TacoRepository tacoRepository;
 
     @Autowired
-    public DesignController(IngredientRepository ingredientRepo, TacoRepository tacoRepository) {
-        this.ingredientRepo = ingredientRepo;
+    public DesignController(IngredientRepository ingredientRepository, TacoRepository tacoRepository) {
+        this.ingredientRepository = ingredientRepository;
         this.tacoRepository = tacoRepository;
     }
 
@@ -47,7 +47,7 @@ public class DesignController {
     @GetMapping
     public String showDesignForm(Model model) {
         List<Ingredient> ingredients = new ArrayList<>();
-        ingredientRepo.findAll().forEach(i -> ingredients.add(i));
+        ingredientRepository.findAll().forEach(i -> ingredients.add(i));
 
         Type[] types = Ingredient.Type.values();
         for (Type type : types) {
