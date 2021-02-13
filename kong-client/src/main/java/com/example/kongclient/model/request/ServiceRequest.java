@@ -1,5 +1,8 @@
 package com.example.kongclient.model.request;
 
+import lombok.Data;
+
+@Data
 public class ServiceRequestBody {
 
     private String name;
