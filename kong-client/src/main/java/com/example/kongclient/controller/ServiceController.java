@@ -1,39 +1,58 @@
 package com.example.kongclient.controller;
 
-import com.example.kongclient.model.request.ServiceRequestBody;
+import com.example.kongclient.model.request.ServiceRequest;
+import com.example.kongclient.model.response.ServiceResponse;
+import com.example.kongclient.service.KongAdminClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
+@RequestMapping(value = "/services", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 public class ServiceController {
 
-    @PostMapping(name = "/services")
-    public ResponseEntity<Object> addService(@RequestBody ServiceRequestBody serviceRequestBody){
-        return null;
+    private final KongAdminClient kongAdminClient;
+
+    @Autowired
+    public ServiceController(KongAdminClient kongAdminClient) {
+        this.kongAdminClient = kongAdminClient;
     }
 
-//    @GetMapping(name = "/services")
+    @PostMapping
+    public @ResponseBody
+    ResponseEntity<ServiceResponse> addService(@RequestBody ServiceRequest serviceRequest) {
+        ResponseEntity<ServiceResponse> serviceResponse = kongAdminClient.addService(serviceRequest);
+        if (serviceResponse.getStatusCode() != HttpStatus.CREATED) {
+
+        }
+        return serviceResponse;
+    }
+
+//    @GetMapping("/services")
 //    public ResponseEntity<Object> getServices(){
 //        return null;
 //    }
 
-    @GetMapping(name = "/services/{serviceId}")
-    public ResponseEntity<Object> retrieveService(){
+    @GetMapping("/{serviceId}")
+    public ResponseEntity<Object> retrieveService() {
         return null;
     }
 
-    @PatchMapping(name = "/services/{serviceId}")
-    public ResponseEntity<Object> updateService(){
+    @PatchMapping("/{serviceId}")
+    public ResponseEntity<Object> updateService() {
         return null;
     }
 
-    @PutMapping(name = "/services/{serviceId}")
-    public ResponseEntity<Object> updateOrCreateService(){
+    @PutMapping("/{serviceId}")
+    public ResponseEntity<Object> updateOrCreateService() {
         return null;
     }
 
-    @DeleteMapping(name = "/services/{serviceId}")
-    public ResponseEntity<Object> deleteService(){
+    @DeleteMapping("/{serviceId}")
+    public ResponseEntity<Object> deleteService() {
         return null;
     }
 }
