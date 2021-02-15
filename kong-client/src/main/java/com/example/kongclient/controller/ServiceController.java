@@ -37,22 +37,29 @@ public class ServiceController {
 //    }
 
     @GetMapping("/{serviceId}")
-    public ResponseEntity<Object> retrieveService() {
-        return null;
-    }
+    public ResponseEntity<ServiceResponse> retrieveService(@PathVariable String serviceId) {
+        ResponseEntity<ServiceResponse> serviceResponse = kongAdminClient.retrieveService(serviceId);
+        if (serviceResponse.getStatusCode() != HttpStatus.OK) {
 
-    @PatchMapping("/{serviceId}")
-    public ResponseEntity<Object> updateService() {
-        return null;
+        }
+        return serviceResponse;
     }
 
     @PutMapping("/{serviceId}")
-    public ResponseEntity<Object> updateOrCreateService() {
-        return null;
+    public ResponseEntity<ServiceResponse> updateOrCreateService(@RequestBody ServiceRequest serviceRequest, @PathVariable String serviceId) {
+        ResponseEntity<ServiceResponse> serviceResponse = kongAdminClient.updateOrCreateService(serviceId, serviceRequest);
+        if (serviceResponse.getStatusCode() != HttpStatus.OK) {
+
+        }
+        return serviceResponse;
     }
 
     @DeleteMapping("/{serviceId}")
-    public ResponseEntity<Object> deleteService() {
-        return null;
+    public ResponseEntity<ServiceResponse> deleteService(@PathVariable String serviceId) {
+        ResponseEntity<ServiceResponse> serviceResponse = kongAdminClient.deleteService(serviceId);
+        if (serviceResponse.getStatusCode() != HttpStatus.NO_CONTENT) {
+
+        }
+        return serviceResponse;
     }
 }
