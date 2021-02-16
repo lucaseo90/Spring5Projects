@@ -65,13 +65,13 @@
 
 
 # TODO
- - [ ] Service Object
-   - [ ] Add Service
+ - [x] Service Object
+   - [x] Add Service
    - [ ] List Services
-   - [ ] Retrieve Service
+   - [x] Retrieve Service
    - [ ] Update Service
-   - [ ] Update Or Create Service
-   - [ ] Delete Service
+   - [x] Update Or Create Service
+   - [x] Delete Service
  - [ ] Route Object
    - [ ]  Add Route
    - [ ]  List Routes
