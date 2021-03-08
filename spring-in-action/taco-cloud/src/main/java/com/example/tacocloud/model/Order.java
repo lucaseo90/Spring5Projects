@@ -1,5 +1,6 @@
 package com.example.tacocloud.model;
 
+import com.example.tacocloud.model.security.User;
 import lombok.Data;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
@@ -24,6 +25,9 @@ public class Order implements Serializable {
     private Long id;
 
     private Date placedAt;
+
+    @ManyToOne
+    private User user;
 
     @NotBlank(message = "Name is required")
     private String deliveryName;

@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest
-public class HomeControllerTest {
+public class LoginControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -33,10 +33,10 @@ public class HomeControllerTest {
     private OrderRepository orderRepository;
 
     @Test
-    public void testHomePage() throws Exception {
-        mockMvc.perform(get("/"))
+    public void testLoginPage() throws Exception {
+        mockMvc.perform(get("/login"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("home"))
-                .andExpect(content().string(containsString("Welcome to...")));
+                .andExpect(view().name("login"))
+                .andExpect(content().string(containsString("New here? Click")));
     }
 }
